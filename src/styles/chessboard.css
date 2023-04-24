@@ -1,0 +1,100 @@
+#chess-board {
+    position: relative;
+}
+
+
+.chess-board-div {
+    background-color: white;
+    width: 500px;
+    height: 500px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    gap: 0px;
+}
+
+.chess-board-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 0px;
+}
+
+.chess-board-box {
+    width: 62px;
+    height: 62px;
+    position: relative;
+}
+
+.light-square {
+    background-color: #eeeed2;
+}
+
+.dark-square {
+    background-color: #7fa650;
+}
+
+.chess-board-box:hover {
+    margin: 1px;
+    width: 61px;
+    height: 61px;
+}
+
+.chess-board-box:active {
+    background-color: yellow;
+}
+
+.chess-board-box.active {
+    background-color: yellow;
+}
+
+.chess-board-box.danger {
+    background-color: rgba(255,0,0,0.5);
+}
+
+.notation {
+    position: absolute;
+    font-weight: bold;
+}
+
+.numberNotation {
+    top: 5px;
+    left: 5px;
+    z-index: 10;
+}
+
+.alphaNotation {
+    bottom: 5px;
+    right: 5px;
+    z-index: 10;
+}
+
+.light-notation {
+    color: #eeeed2;
+}
+
+.dark-notation {
+    color: #7fa650;
+}
+
+.chess-piece {
+    position: absolute;
+    width: 62px;
+    height: 62px;
+    cursor: pointer;
+}
+
+.hint-box {
+    position: absolute;
+    max-width: 62px;
+    max-height: 62px;
+    cursor: pointer;
+    padding: 22px;
+}
+
+.hint-box-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 100%;
+    background-color: rgba(0,0,0,0.3);
+}
