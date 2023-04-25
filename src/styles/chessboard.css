@@ -1,5 +1,31 @@
 #chess-board {
     position: relative;
+    margin: 200px auto;
+}
+
+.start-btn {
+    padding: 20px 40px;
+    border: 2px solid #b0e969;
+    border-radius: 30px;
+    background-color: #7fa650;
+    box-shadow: 2px 0px 10px 1px #eeeed2;
+    font-size: 2.5em;
+    color: #30411d;
+    font-family: Tahoma, Geneva, Verdana, sans-serif;
+    letter-spacing: 3px;
+    font-weight: 400;
+    transition: all 0.3s ease-in-out;
+}
+
+.start-btn:hover, .start-btn:active {
+    cursor: pointer;    
+}
+
+.start-btn:active {
+    padding: 17px 35px;
+    box-shadow: none;
+    font-size: 2.1em;
+    background-color: #b0e969;
 }
 
 
@@ -41,11 +67,11 @@
 }
 
 .chess-board-box:active {
-    background-color: yellow;
+    background-color: rgba(255,255,0,0.7);
 }
 
 .chess-board-box.active {
-    background-color: yellow;
+    background-color: rgba(255,255,0,0.7);
 }
 
 .chess-board-box.danger {
@@ -97,4 +123,47 @@
     height: 16px;
     border-radius: 100%;
     background-color: rgba(0,0,0,0.3);
+}
+
+#player-1, #player-2 {
+    position: absolute;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+#player-1 {
+    align-items: flex-start;
+    top: 505px;
+    right: 0;
+}
+
+#player-2 {
+    align-items: flex-end;
+    bottom: 505px;
+    left: 0;
+}
+
+#player-1 > .time, #player-2 > .time {
+    background-color: #f5f5f5;
+    padding: 10px 12px;
+    font-size: 1.5em;
+    width: 60px;
+    text-align: center;
+    border-radius: 10px;
+}
+
+#player-1 > .removed-pieces, #player-2 > .removed-pieces {
+    border: 5px solid #b0e969;
+    width: 400px;
+    height: 140px;
+    border-radius: 10px;
+}
+
+#player-1 > .removed-pieces {
+    background: linear-gradient(#bbbbbb 0%, #909090 50%, #606060 100%);
+}
+
+#player-2 > .removed-pieces {
+    background: linear-gradient(#505050 0%, #707070 50%, #909090 100%);
 }

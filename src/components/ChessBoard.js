@@ -4,7 +4,7 @@ import { useState } from "react";
 const Box = ({cName, isDark=false, numberNotation=null, alphaNotation=null}) => {
 
     return (
-        <div className={`chess-board-box ${isDark? "dark-square": "light-square"} ${cName}`} onClick={() => console.log(cName)}>
+        <div className={`chess-board-box ${isDark? "dark-square": "light-square"} ${cName}`}>
             {numberNotation && (
                 <span className={`notation numberNotation ${isDark? "light-notation": "dark-notation"}`}>{numberNotation}</span>
             )}
@@ -92,64 +92,165 @@ const ChessBoard = () => {
     const [wp7, setWp7] = useState({x:6,y:6});
     const [wp8, setWp8] = useState({x:7,y:6});
     
+    const [currentPlayerWhite, setCurrentPlayerWhite] = useState(true);
     const [hints, setHints] = useState([]);
     const [prevActive, setPrevActive] = useState([-1,-1]);
     const [hintPieceActive, setHintPieceActive] = useState([-1,-1]);
-    // const [pieceInDanger, setPieceInDanger] = useState([]);
+    const [pieceInDanger, setPieceInDanger] = useState([]);
+    const [whiteKingMoved, setWhiteKingMoved] = useState(false);
+    const [blackKingMoved, setBlackKingMoved] = useState(false);
+    const [blackRook1Moved, setBlackRook1Moved] = useState(false);
+    const [blackRook2Moved, setBlackRook2Moved] = useState(false);
+    const [whiteRook1Moved, setWhiteRook1Moved] = useState(false);
+    const [whiteRook2Moved, setWhiteRook2Moved] = useState(false);
+
+    const removedBlackPieceCoordinates = [{x:0.3,y:8.3},{x:1,y:8.3},{x:1.7,y:8.3},{x:2.4,y:8.3},{x:3.1,y:8.3},{x:3.8,y:8.3},{x:4.5,y:8.3},{x:5.2,y:8.3},
+                                        {x:0.3,y:9.3},{x:1,y:9.3},{x:1.7,y:9.3},{x:2.4,y:9.3},{x:3.1,y:9.3},{x:3.8,y:9.3},{x:4.5,y:9.3},{x:5.2,y:9.3}];
+                                        
+    const removedWhitePieceCoordinates = [{x:6.7,y:-1.3},{x:6.0,y:-1.3},{x:5.3,y:-1.3},{x:4.6,y:-1.3},{x:3.9,y:-1.3},{x:3.2,y:-1.3},{x:2.5,y:-1.3},{x:1.8,y:-1.3},
+                                        {x:6.7,y:-2.3},{x:6.0,y:-2.3},{x:5.3,y:-2.3},{x:4.6,y:-2.3},{x:3.9,y:-2.3},{x:3.2,y:-2.3},{x:2.5,y:-2.3},{x:1.8,y:-2.3}];
+    
+    const [curRemovedWP, setCurRemovedWP] = useState(0);
+    const [curRemovedBP, setCurRemovedBP] = useState(0);
+
+    const totalTime = 10;
+    const incrementTime = 0;
+    const [started, setStarted] = useState(false);
+    const [isPlayer1Move, setPlayer1Move] = useState(true);
+    const [player1Mins, setPlayer1Mins] = useState(totalTime);
+    const [player1Secs, setPlayer1Secs] = useState(0);
+    const [player2Mins, setPlayer2Mins] = useState(totalTime);
+    const [player2Secs, setPlayer2Secs] = useState(0);
 
     const checkCoordinates = (x,y) => {
         return {left: 62*x, top: 62*y};
+    }
+
+    const movePiece = (x, y, prevX, prevY, sym) => {
+        let tmp = board;
+        tmp[y][x] = board[prevY][prevX];
+        if(tmp[y][x]==="BR1") {setBr1({x, y}); setBlackRook1Moved(true);}
+        else if(tmp[y][x]==="BN1") setBn1({x, y});
+        else if(tmp[y][x]==="BB1") setBb1({x, y});
+        else if(tmp[y][x]==="BQ") setBq({x, y});
+        else if(tmp[y][x]==="BK") {
+            setBk({x, y}); setBlackKingMoved(true);
+            if((x - prevX)===2) {
+                setBr2({x:x-1, y});
+                setBlackRook2Moved(true);
+            }
+            else if((prevX - x)===2) {
+                setBr1({x:x+1, y});
+                setBlackRook1Moved(true);
+            }
+        }
+        else if(tmp[y][x]==="BB2") setBb2({x, y});
+        else if(tmp[y][x]==="BN2") setBn2({x, y});
+        else if(tmp[y][x]==="BR2") {setBr2({x, y}); setBlackRook2Moved(true);}
+
+        else if(tmp[y][x]==="BP1") setBp1({x, y});
+        else if(tmp[y][x]==="BP2") setBp2({x, y});
+        else if(tmp[y][x]==="BP3") setBp3({x, y});
+        else if(tmp[y][x]==="BP4") setBp4({x, y});
+        else if(tmp[y][x]==="BP5") setBp5({x, y});
+        else if(tmp[y][x]==="BP6") setBp6({x, y});
+        else if(tmp[y][x]==="BP7") setBp7({x, y});
+        else if(tmp[y][x]==="BP8") setBp8({x, y});
+
+        else if(tmp[y][x]==="WR1") {setWr1({x, y}); setWhiteRook1Moved(true);}
+        else if(tmp[y][x]==="WN1") setWn1({x, y});
+        else if(tmp[y][x]==="WB1") setWb1({x, y});
+        else if(tmp[y][x]==="WQ") setWq({x, y});
+        else if(tmp[y][x]==="WK") {
+            setWk({x, y}); setWhiteKingMoved(true);
+            if((x - prevX)===2) {
+                setWr2({x:x-1, y});
+                setWhiteRook2Moved(true);
+            }
+            else if((prevX - x)===2) {
+                setWr1({x:x+1, y});
+                setWhiteRook1Moved(true);
+            }
+        }
+        else if(tmp[y][x]==="WB2") setWb2({x, y});
+        else if(tmp[y][x]==="WN2") setWn2({x, y});
+        else if(tmp[y][x]==="WR2") {setWr2({x, y}); setWhiteRook2Moved(true);}
+
+        else if(tmp[y][x]==="WP1") setWp1({x, y});
+        else if(tmp[y][x]==="WP2") setWp2({x, y});
+        else if(tmp[y][x]==="WP3") setWp3({x, y});
+        else if(tmp[y][x]==="WP4") setWp4({x, y});
+        else if(tmp[y][x]==="WP5") setWp5({x, y});
+        else if(tmp[y][x]==="WP6") setWp6({x, y});
+        else if(tmp[y][x]==="WP7") setWp7({x, y});
+        else if(tmp[y][x]==="WP8") setWp8({x, y});
+        tmp[prevY][prevX] = sym;
+        document.getElementsByClassName(`${x}-${y}`)[0].classList.add('active');
+        setHintPieceActive([x,y]);
+        setBoard(tmp);
+        // setCurrentPlayerWhite(!currentPlayerWhite);
+    }
+
+    const removePiece = (x, y) => {
+        let tmp = board;
+        if(tmp[y][x][0]==="B") {
+            const left = removedBlackPieceCoordinates[curRemovedBP].x;
+            const top = removedBlackPieceCoordinates[curRemovedBP].y;
+            // document.getElementById("black-queen").classList.add("removed-piece");
+            if(tmp[y][x]==="BR1") setBr1({x: left, y: top});
+            else if(tmp[y][x]==="BN1") setBn1({x: left, y: top});
+            else if(tmp[y][x]==="BB1") setBb1({x: left, y: top});
+            else if(tmp[y][x]==="BQ") {setBq({x: left, y: top})}
+            else if(tmp[y][x]==="BK") setBk({x: left, y: top});
+            else if(tmp[y][x]==="BB2") setBb2({x: left, y: top});
+            else if(tmp[y][x]==="BN2") setBn2({x: left, y: top});
+            else if(tmp[y][x]==="BR2") setBr2({x: left, y: top});
+    
+            else if(tmp[y][x]==="BP1") setBp1({x: left, y: top});
+            else if(tmp[y][x]==="BP2") setBp2({x: left, y: top});
+            else if(tmp[y][x]==="BP3") setBp3({x: left, y: top});
+            else if(tmp[y][x]==="BP4") setBp4({x: left, y: top});
+            else if(tmp[y][x]==="BP5") setBp5({x: left, y: top});
+            else if(tmp[y][x]==="BP6") setBp6({x: left, y: top});
+            else if(tmp[y][x]==="BP7") setBp7({x: left, y: top});
+            else if(tmp[y][x]==="BP8") setBp8({x: left, y: top});
+            setCurRemovedBP(curRemovedBP + 1);
+        }
+        else {
+            const left = removedWhitePieceCoordinates[curRemovedWP].x;
+            const top = removedWhitePieceCoordinates[curRemovedWP].y;
+            if(tmp[y][x]==="WR1") setWr1({x: left, y: top});
+            else if(tmp[y][x]==="WN1") setWn1({x: left, y: top});
+            else if(tmp[y][x]==="WB1") setWb1({x: left, y: top});
+            else if(tmp[y][x]==="WQ") setWq({x: left, y: top});
+            else if(tmp[y][x]==="WK") setWk({x: left, y: top});
+            else if(tmp[y][x]==="WB2") setWb2({x: left, y: top});
+            else if(tmp[y][x]==="WN2") setWn2({x: left, y: top});
+            else if(tmp[y][x]==="WR2") setWr2({x: left, y: top});
+    
+            else if(tmp[y][x]==="WP1") setWp1({x: left, y: top});
+            else if(tmp[y][x]==="WP2") setWp2({x: left, y: top});
+            else if(tmp[y][x]==="WP3") setWp3({x: left, y: top});
+            else if(tmp[y][x]==="WP4") setWp4({x: left, y: top});
+            else if(tmp[y][x]==="WP5") setWp5({x: left, y: top});
+            else if(tmp[y][x]==="WP6") setWp6({x: left, y: top});
+            else if(tmp[y][x]==="WP7") setWp7({x: left, y: top});
+            else if(tmp[y][x]==="WP8") setWp8({x: left, y: top});
+            setCurRemovedWP(curRemovedWP + 1);
+        }
     }
 
     const HintBox = ({x, y}) => {
         const r = checkCoordinates(x, y);
         return (
             <div className="hint-box" style={{top: r.top, left: r.left}} onClick={() => {
-                // let tmp = [...board.map(r => [...r])];
-                let tmp = board;
                 setHints([]);
-                tmp[y][x] = board[prevActive[1]][prevActive[0]];
-                if(tmp[y][x]==="BR1") setBr1({x, y});
-                else if(tmp[y][x]==="BN1") setBn1({x, y});
-                else if(tmp[y][x]==="BB1") setBb1({x, y});
-                else if(tmp[y][x]==="BQ") setBq({x, y});
-                else if(tmp[y][x]==="BK") setBk({x, y});
-                else if(tmp[y][x]==="BB2") setBb2({x, y});
-                else if(tmp[y][x]==="BN2") setBn2({x, y});
-                else if(tmp[y][x]==="BR2") setBr2({x, y});
+                pieceInDanger.forEach((c) => {
+                    document.getElementsByClassName(`${c[0]}-${c[1]}`)[0].classList.remove('danger');
+                })
+                setPieceInDanger([]);
 
-                else if(tmp[y][x]==="BP1") setBp1({x, y});
-                else if(tmp[y][x]==="BP2") setBp2({x, y});
-                else if(tmp[y][x]==="BP3") setBp3({x, y});
-                else if(tmp[y][x]==="BP4") setBp4({x, y});
-                else if(tmp[y][x]==="BP5") setBp5({x, y});
-                else if(tmp[y][x]==="BP6") setBp6({x, y});
-                else if(tmp[y][x]==="BP7") setBp7({x, y});
-                else if(tmp[y][x]==="BP8") setBp8({x, y});
-
-                else if(tmp[y][x]==="WR1") setWr1({x, y});
-                else if(tmp[y][x]==="WN1") setWn1({x, y});
-                else if(tmp[y][x]==="WB1") setWb1({x, y});
-                else if(tmp[y][x]==="WQ") setWq({x, y});
-                else if(tmp[y][x]==="WK") setWk({x, y});
-                else if(tmp[y][x]==="WB2") setWb2({x, y});
-                else if(tmp[y][x]==="WN2") setWn2({x, y});
-                else if(tmp[y][x]==="WR2") setWr2({x, y});
-
-                else if(tmp[y][x]==="WP1") setWp1({x, y});
-                else if(tmp[y][x]==="WP2") setWp2({x, y});
-                else if(tmp[y][x]==="WP3") setWp3({x, y});
-                else if(tmp[y][x]==="WP4") setWp4({x, y});
-                else if(tmp[y][x]==="WP5") setWp5({x, y});
-                else if(tmp[y][x]==="WP6") setWp6({x, y});
-                else if(tmp[y][x]==="WP7") setWp7({x, y});
-                else if(tmp[y][x]==="WP8") setWp8({x, y});
-                
-                tmp[prevActive[1]][prevActive[0]] = '.';
-                setBoard(tmp);
-                document.getElementsByClassName(`${x}-${y}`)[0].classList.add('active');
-                setHintPieceActive([x,y]);
-                // console.log(tmp);
+                movePiece(x, y, prevActive[0], prevActive[1], '.');
             }}>
                 <div className="hint-box-dot"></div>
             </div>
@@ -158,27 +259,51 @@ const ChessBoard = () => {
 
     const handleHints = ({x, y}) => {
         let tmp = [];
+        let tmpPieceInDanger = [];
         const cur = board[y][x];
-        // console.log(x,y,cur);
         if(cur==="BR1" || cur==="WR1" || cur==="BR2" || cur==="WR2" || cur==="WQ" || cur==="BQ") {
             let i = 1;
-            while (i+y < 8 && board[i+y][x]==='.') {
-                tmp.push([x,i+y]);
+            while (i+y < 8) {
+                if(board[i+y][x]==='.')
+                    tmp.push([x,i+y]);
+                else {
+                    if(board[i+y][x][0]!==cur[0])
+                        tmpPieceInDanger.push([x,i+y]);
+                    break;
+                }
                 i += 1
             };
             i = 1;
-            while (i+x < 8 && board[y][i+x]==='.') {
-                tmp.push([i+x,y]);
+            while (i+x < 8) {
+                if(board[y][i+x]==='.')
+                    tmp.push([i+x,y]);
+                else {
+                    if(board[y][i+x][0]!==cur[0])
+                        tmpPieceInDanger.push([i+x,y]);
+                    break;
+                }
                 i += 1
             };
             i = 1;
-            while (x-i >= 0 && board[y][x-i]==='.') {
-                tmp.push([x-i,y]);
+            while (x-i >= 0) {
+                if(board[y][x-i]==='.')
+                    tmp.push([x-i,y]);
+                else {
+                    if(board[y][x-i][0]!==cur[0])
+                        tmpPieceInDanger.push([x-i,y]);
+                    break;
+                }
                 i += 1
             };
             i = 1;
-            while (y-i >= 0 && board[y-i][x]==='.') {
-                tmp.push([x,y-i]);
+            while (y-i >= 0) {
+                if(board[y-i][x]==='.')
+                    tmp.push([x,y-i]);
+                else {
+                    if(board[y-i][x][0]!==cur[0])
+                        tmpPieceInDanger.push([x,y-i]);
+                    break;
+                }
                 i += 1
             };
         }
@@ -188,50 +313,119 @@ const ChessBoard = () => {
             dirs.forEach((d) => {
                 const i = x+d[0];
                 const j = y+d[1];
-                if(i >= 0 && i < 8 && j >= 0 && j < 8 && board[j][i]==='.') 
-                    tmp.push([i,j]);
+                if(i >= 0 && i < 8 && j >= 0 && j < 8)  {
+                    if(board[j][i]==='.')
+                        tmp.push([i,j]);
+                    else if (board[j][i][0]!==cur[0]) 
+                        tmpPieceInDanger.push([i,j]);
+                }
             });
         } 
 
         if(cur==="BB1" || cur==="WB1" || cur==="BB2" || cur==="WB2" || cur==="WQ" || cur==="BQ") {
             let i = 1; let j = 1;
-            while (y+i < 8 && x+j < 8 && board[i+y][x+j]==='.') {
-                tmp.push([x+j,i+y]);
+            while (y+i < 8 && x+j < 8) {
+                if(board[y+i][x+j]==='.')
+                    tmp.push([x+j,i+y]);
+                else {
+                    if(board[y+i][x+j][0]!==cur[0])
+                        tmpPieceInDanger.push([x+j,y+i]);
+                    break;
+                }
                 i += 1; j += 1;
             };
             i = 1; j = 1;
-            while (y-i >=0 && x-j >=0 && board[y-i][x-j]==='.') {
-                tmp.push([x-j,y-i]);
+            while (y-i >=0 && x-j >=0) {
+                if(board[y-i][x-j]==='.')
+                    tmp.push([x-j,y-i]);
+                else {
+                    if(board[y-i][x-j][0]!==cur[0])
+                        tmpPieceInDanger.push([x-j,y-i]);
+                    break;
+                }
                 i += 1; j += 1;
             };
             i = 1; j = 1;
-            while (y-i >=0 && x+j < 8 && board[y-i][x+j]==='.') {
-                tmp.push([x+j,y-i]);
+            while (y-i >=0 && x+j < 8) {
+                if(board[y-i][x+j]==='.')
+                    tmp.push([x+j,y-i]);
+                else {
+                    if(board[y-i][x+j][0]!==cur[0])
+                        tmpPieceInDanger.push([x+j,y-i]);
+                    break;
+                }
                 i += 1; j += 1;
             };
             i = 1; j = 1;
-            while (y+i < 8 && x-j >=0 && board[y+i][x-j]==='.') {
-                tmp.push([x-j,y+i]);
+            while (y+i < 8 && x-j >=0) {
+                if(board[y+i][x-j]==='.')
+                    tmp.push([x-j,i+y]);
+                else {
+                    if(board[y+i][x-j][0]!==cur[0])
+                        tmpPieceInDanger.push([x-j,y+i]);
+                    break;
+                }
                 i += 1; j += 1;
             };
         }
 
         else if (cur==="BK" || cur==="WK") {
-            const dirs = [[0,1],[1,0],[0,-1],[-1,0]];
+            const dirs = [[0,1],[1,0],[0,-1],[-1,0],[1,1],[-1,-1],[-1,1],[1,-1]];
             dirs.forEach((d) => {
                 const i = x+d[0];
                 const j = y+d[1];
-                if(i >= 0 && i < 8 && j >= 0 && j < 8 && board[j][i]==='.') 
-                    tmp.push([i,j]);
-            })
+                if(i >= 0 && i < 8 && j >= 0 && j < 8)  {
+                    if(board[j][i]==='.')
+                        tmp.push([i,j]);
+                    else if (board[j][i][0]!==cur[0]) 
+                        tmpPieceInDanger.push([i,j]);
+                }
+            });
+            if(cur==="BK" && !blackKingMoved) {
+                if(!blackRook2Moved) {
+                    let i = x+1;
+                    while(i < 7 && board[y][i]===".") { i += 1; }
+                    if(i===7) {
+                        tmp.push([x+2,y]);
+                    }
+                }
+                if(!blackRook1Moved) {
+                    let i = x-1;
+                    while(i > 0 && board[y][i]===".") { i -= 1; }
+                    if(i===0) {
+                        tmp.push([x-2,y]);
+                    }
+                }
+            }
+            if(cur==="WK" && !whiteKingMoved) {
+                if(!whiteRook2Moved) {
+                    let i = x+1;
+                    while(i < 7 && board[y][i]===".") { i += 1; }
+                    if(i===7) {
+                        tmp.push([x+2,y]);
+                    }
+                }
+                if(!whiteRook1Moved) {
+                    let i = x-1;
+                    while(i > 0 && board[y][i]===".") { i -= 1; }
+                    if(i===0) {
+                        tmp.push([x-2,y]);
+                    }
+                }
+            }
         }
         
         else if (cur.slice(0,2)==="WP") {
             if(y===6 && board[y-2][x]===".") {
                 tmp.push([x,y-2]);
             } 
-            if (board[y-1][x]===".") {
-                tmp.push([x,y-1]);
+            if (y-1 >= 0) {
+                if(board[y-1][x]===".")
+                    tmp.push([x,y-1]);
+                if(x-1 >= 0 && board[y-1][x-1]!=="." && board[y-1][x-1][0]!==cur[0])
+                    tmpPieceInDanger.push([x-1,y-1]);
+                if(x+1 < 8 && board[y-1][x+1]!=="." && board[y-1][x+1][0]!==cur[0])
+                    tmpPieceInDanger.push([x+1,y-1]);
             }
         }
 
@@ -239,36 +433,78 @@ const ChessBoard = () => {
             if(y===1 && board[y+2][x]===".") {
                 tmp.push([x,y+2]);
             } 
-            if (board[y+1][x]===".") {
-                tmp.push([x,y+1]);
+            if (y+1 < 8) {
+                if(board[y+1][x]===".")
+                    tmp.push([x,y+1]);
+                if(x-1 >= 0 && board[y+1][x-1]!=="." && board[y+1][x-1][0]!==cur[0])
+                    tmpPieceInDanger.push([x-1,y+1]);
+                if(x+1 < 8 && board[y+1][x+1]!=="." && board[y+1][x+1][0]!==cur[0])
+                    tmpPieceInDanger.push([x+1,y+1]);
             }
         }
 
-
         setHints([...tmp]);
-        // console.log(tmp);
+        setPieceInDanger([...tmpPieceInDanger]);
+        tmpPieceInDanger.forEach((c) => {
+            document.getElementsByClassName(`${c[0]}-${c[1]}`)[0].classList.add('danger');
+        });
+
     }
     
     const handlePieceClick = ({x, y}) => {
+        if(!started) return;
+
         if(hintPieceActive[0]!==-1) {
             document.getElementsByClassName(`${hintPieceActive[0]}-${hintPieceActive[1]}`)[0].classList.remove('active');
         }
-        if(prevActive[0]===-1) {
-            document.getElementsByClassName(`${x}-${y}`)[0].classList.add('active');
-            setPrevActive([x, y]);
-            handleHints({x, y})
-        } else {
-            if(prevActive[0]===x && prevActive[1]===y) {
-                document.getElementsByClassName(`${x}-${y}`)[0].classList.remove('active');
-                setPrevActive([-1, -1]);
-                setHints([]);
-            } else {
-                document.getElementsByClassName(`${prevActive[0]}-${prevActive[1]}`)[0].classList.remove('active');
-                document.getElementsByClassName(`${x}-${y}`)[0].classList.add('active');
-                setPrevActive([x, y]);
-                handleHints({x, y});
+
+        let dangerPiece = false;
+        for (let index = 0; index < pieceInDanger.length; index++) {
+            if(pieceInDanger[index][0]===x && pieceInDanger[index][1]===y) {
+                dangerPiece = true;
+                break;
             }
         }
+
+        if(dangerPiece) {
+            
+            setHints([]);
+            pieceInDanger.forEach((c) => {
+                document.getElementsByClassName(`${c[0]}-${c[1]}`)[0].classList.remove('danger');
+            })
+            setPieceInDanger([]);
+            removePiece(x, y);
+            movePiece(x, y, prevActive[0], prevActive[1], '.');
+        }
+
+        else {
+            if(prevActive[0]===-1) {
+                document.getElementsByClassName(`${x}-${y}`)[0].classList.add('active');
+                setPrevActive([x, y]);
+                if((currentPlayerWhite && board[y][x][0]==="B") || (!currentPlayerWhite && board[y][x][0]==="W"))
+                    setHints([]);
+                else handleHints({x, y});
+            } else {
+                pieceInDanger.forEach((c) => {
+                    document.getElementsByClassName(`${c[0]}-${c[1]}`)[0].classList.remove('danger');
+                })
+                setPieceInDanger([]);
+    
+                if(prevActive[0]===x && prevActive[1]===y) {
+                    document.getElementsByClassName(`${x}-${y}`)[0].classList.remove('active');
+                    setPrevActive([-1, -1]);
+                    setHints([]);
+                } else {
+                    document.getElementsByClassName(`${prevActive[0]}-${prevActive[1]}`)[0].classList.remove('active');
+                    document.getElementsByClassName(`${x}-${y}`)[0].classList.add('active');
+                    setPrevActive([x, y]);
+                    if((currentPlayerWhite && board[y][x][0]==="B") || (!currentPlayerWhite && board[y][x][0]==="W")) 
+                        setHints([]);
+                    else handleHints({x, y});
+                }
+            }
+        }
+
     }
     
     const BlackRook = ({x, y}) => {
@@ -378,62 +614,79 @@ const ChessBoard = () => {
             </div>
         )
     };
-    
+
     
     return (
-        <div id="chess-board">
-            <div className="chess-board-div">
-                <BoardRow firstDark={false} number={"8"} cName="0" />
-                <BoardRow firstDark={true} number={"7"} cName="1" />
-                <BoardRow firstDark={false} number={"6"} cName="2" />
-                <BoardRow firstDark={true} number={"5"} cName="3" />
-                <BoardRow firstDark={false} number={"4"} cName="4" />
-                <BoardRow firstDark={true} number={"3"} cName="5" />
-                <BoardRow firstDark={false} number={"2"} cName="6" />
-                <BoardRow lastRow={true} cName="7" />
+        <div id="main">
 
-                <BlackRook x={br1.x} y={br1.y} prevActive={prevActive} setPrevActive={setPrevActive} />
-                <BlackKnight x={bn1.x} y={bn1.y} prevActive={prevActive} setPrevActive={setPrevActive} />
-                <BlackBishop x={bb1.x} y={bb1.y} prevActive={prevActive} setPrevActive={setPrevActive} />
-                <BlackQueen x={bq.x} y={bq.y} prevActive={prevActive} setPrevActive={setPrevActive} />
-                <BlackKing x={bk.x} y={bk.y} prevActive={prevActive} setPrevActive={setPrevActive} />
-                <BlackBishop x={bb2.x} y={bb2.y} prevActive={prevActive} setPrevActive={setPrevActive} />
-                <BlackKnight x={bn2.x} y={bn2.y} prevActive={prevActive} setPrevActive={setPrevActive} />
-                <BlackRook x={br2.x} y={br2.y} prevActive={prevActive} setPrevActive={setPrevActive} />
+            {!started && <button className="start-btn" onClick={() => {setStarted(true)}}>Start</button>}
 
-                <BlackPawn x={bp1.x} y={bp1.y} prevActive={prevActive} setPrevActive={setPrevActive} />
-                <BlackPawn x={bp2.x} y={bp2.y} prevActive={prevActive} setPrevActive={setPrevActive} />
-                <BlackPawn x={bp3.x} y={bp3.y} prevActive={prevActive} setPrevActive={setPrevActive} />
-                <BlackPawn x={bp4.x} y={bp4.y} prevActive={prevActive} setPrevActive={setPrevActive} />
-                <BlackPawn x={bp5.x} y={bp5.y} prevActive={prevActive} setPrevActive={setPrevActive} />
-                <BlackPawn x={bp6.x} y={bp6.y} prevActive={prevActive} setPrevActive={setPrevActive} />
-                <BlackPawn x={bp7.x} y={bp7.y} prevActive={prevActive} setPrevActive={setPrevActive} />
-                <BlackPawn x={bp8.x} y={bp8.y} prevActive={prevActive} setPrevActive={setPrevActive} />                
+            { started && <div id="chess-board">
+                <div id="player-1">
+                    <div className="removed-pieces"></div>
+                    <div className="time">
+                        <div>{player1Mins < 10? "0" + player1Mins : player1Mins}:{player1Secs < 10? "0" + player1Secs : player1Secs}</div>
+                    </div>
+                </div>
+                <div id="player-2">
+                    <div className="time">
+                    <div>{player2Mins < 10? "0" + player2Mins : player2Mins}:{player2Secs < 10? "0" + player2Secs : player2Secs}</div>
+                    </div>
+                    <div className="removed-pieces"></div>
+                </div>
+                <div className="chess-board-div">
+                    <BoardRow firstDark={false} number={"8"} cName="0" />
+                    <BoardRow firstDark={true} number={"7"} cName="1" />
+                    <BoardRow firstDark={false} number={"6"} cName="2" />
+                    <BoardRow firstDark={true} number={"5"} cName="3" />
+                    <BoardRow firstDark={false} number={"4"} cName="4" />
+                    <BoardRow firstDark={true} number={"3"} cName="5" />
+                    <BoardRow firstDark={false} number={"2"} cName="6" />
+                    <BoardRow lastRow={true} cName="7" />
 
-                <WhitePawn x={wp1.x} y={wp1.y} prevActive={prevActive} setPrevActive={setPrevActive} />
-                <WhitePawn x={wp2.x} y={wp2.y} prevActive={prevActive} setPrevActive={setPrevActive} />
-                <WhitePawn x={wp3.x} y={wp3.y} prevActive={prevActive} setPrevActive={setPrevActive} />
-                <WhitePawn x={wp4.x} y={wp4.y} prevActive={prevActive} setPrevActive={setPrevActive} />
-                <WhitePawn x={wp5.x} y={wp5.y} prevActive={prevActive} setPrevActive={setPrevActive} />
-                <WhitePawn x={wp6.x} y={wp6.y} prevActive={prevActive} setPrevActive={setPrevActive} />
-                <WhitePawn x={wp7.x} y={wp7.y} prevActive={prevActive} setPrevActive={setPrevActive} />
-                <WhitePawn x={wp8.x} y={wp8.y} prevActive={prevActive} setPrevActive={setPrevActive} />
+                    <BlackRook x={br1.x} y={br1.y} />
+                    <BlackKnight x={bn1.x} y={bn1.y} />
+                    <BlackBishop x={bb1.x} y={bb1.y} />
+                    <BlackQueen x={bq.x} y={bq.y} />
+                    <BlackKing x={bk.x} y={bk.y} />
+                    <BlackBishop x={bb2.x} y={bb2.y} />
+                    <BlackKnight x={bn2.x} y={bn2.y} />
+                    <BlackRook x={br2.x} y={br2.y} />
 
-                <WhiteRook x={wr1.x} y={wr1.y} prevActive={prevActive} setPrevActive={setPrevActive} />
-                <WhiteKnight x={wn1.x} y={wn1.y} prevActive={prevActive} setPrevActive={setPrevActive} />
-                <WhiteBishop x={wb1.x} y={wb1.y} prevActive={prevActive} setPrevActive={setPrevActive} />
-                <WhiteQueen x={wq.x} y={wq.y} prevActive={prevActive} setPrevActive={setPrevActive} />
-                <WhiteKing x={wk.x} y={wk.y} prevActive={prevActive} setPrevActive={setPrevActive} />
-                <WhiteBishop x={wb2.x} y={wb2.y} prevActive={prevActive} setPrevActive={setPrevActive} />
-                <WhiteKnight x={wn2.x} y={wn2.y} prevActive={prevActive} setPrevActive={setPrevActive} />
-                <WhiteRook x={wr2.x} y={wr2.y} prevActive={prevActive} setPrevActive={setPrevActive} />
+                    <BlackPawn x={bp1.x} y={bp1.y} />
+                    <BlackPawn x={bp2.x} y={bp2.y} />
+                    <BlackPawn x={bp3.x} y={bp3.y} />
+                    <BlackPawn x={bp4.x} y={bp4.y} />
+                    <BlackPawn x={bp5.x} y={bp5.y} />
+                    <BlackPawn x={bp6.x} y={bp6.y} />
+                    <BlackPawn x={bp7.x} y={bp7.y} />
+                    <BlackPawn x={bp8.x} y={bp8.y} />                
 
-                {hints.length > 0 && (
-                    hints.map((coor, index) => (
-                        <HintBox x={coor[0]} y={coor[1]} key={index} />
-                    ))
-                )}
-            </div>
+                    <WhitePawn x={wp1.x} y={wp1.y} />
+                    <WhitePawn x={wp2.x} y={wp2.y} />
+                    <WhitePawn x={wp3.x} y={wp3.y} />
+                    <WhitePawn x={wp4.x} y={wp4.y} />
+                    <WhitePawn x={wp5.x} y={wp5.y} />
+                    <WhitePawn x={wp6.x} y={wp6.y} />
+                    <WhitePawn x={wp7.x} y={wp7.y} />
+                    <WhitePawn x={wp8.x} y={wp8.y} />
+
+                    <WhiteRook x={wr1.x} y={wr1.y} />
+                    <WhiteKnight x={wn1.x} y={wn1.y} />
+                    <WhiteBishop x={wb1.x} y={wb1.y} />
+                    <WhiteQueen x={wq.x} y={wq.y} />
+                    <WhiteKing x={wk.x} y={wk.y} />
+                    <WhiteBishop x={wb2.x} y={wb2.y} />
+                    <WhiteKnight x={wn2.x} y={wn2.y} />
+                    <WhiteRook x={wr2.x} y={wr2.y} />
+
+                    {hints.length > 0 && (
+                        hints.map((coor, index) => (
+                            <HintBox x={coor[0]} y={coor[1]} key={index} />
+                        ))
+                    )}
+                </div>
+            </div> } 
         </div>
     )
 }
