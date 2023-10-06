@@ -1,0 +1,56 @@
+.winner-modal {
+    height: 100vh;
+    width: 100%;
+    position: absolute;
+    z-index: 100;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.winner-div {
+    position: sticky;
+    background-color: #bbbbbb;
+    border-radius: 30px;
+    height: 200px;
+    width: min(90vw, 400px);
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0 auto;
+    display: block;
+}
+
+.close-div {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.close-button-div {
+    padding-right: 20px;
+    padding-top: 20px;
+}
+
+.close-button {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+.winner-player-div {
+    width: 100%;
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.winner-piece {
+    display: block;
+    height: 80px;
+    width: 80px;
+}
+
+.winner-text {
+    font-size: 2em;
+    font-weight: 500;
+}

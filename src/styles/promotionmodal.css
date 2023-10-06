@@ -1,0 +1,39 @@
+.promotion-modal {
+    height: 100vh;
+    width: 100%;
+    position: absolute;
+    z-index: 100;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.promotion-div {
+    position: sticky;
+    background-color: #bbbbbb;
+    border-radius: 30px;
+    height: 150px;
+    width: min(90vw, 400px);
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0 auto;
+}
+
+.promotion-pieces-div {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.promotion-piece-div {
+    cursor: pointer;
+    padding: 3px;
+    background-color: #cccccc;
+    border-radius: 15px;
+}
+
+.promotion-piece {
+    display: block;
+    height: 62px;
+    width: 62px;
+}

@@ -1,0 +1,75 @@
+.reset-modal {
+    height: 100vh;
+    width: 100%;
+    position: absolute;
+    z-index: 100;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.reset-confirm-div {
+    position: sticky;
+    background-color: #ddd;
+    border-radius: 30px;
+    height: 180px;
+    width: min(90vw, 400px);
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0 auto;
+}
+
+.confirm-div {
+    width: 100%;
+    min-height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.reset-text {
+    width: 100%;
+    font-family: Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.btns-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+}
+
+.yes-btn, .no-btn {
+    padding: 10px 20px;
+    border: 3px solid #7fa650;
+    border-radius: 10px;
+    background-color: #b0e969;
+    /* font-size: 2.5em; */
+    /* color: #30411d; */
+    font-family: Tahoma, Geneva, Verdana, sans-serif;
+    letter-spacing: 2px;
+    transition: all 0.3s ease-in-out;
+}
+
+.yes-btn {
+    text-decoration: none;
+}
+
+.yes-btn:hover, .yes-btn:active, .no-btn:hover, .no-btn:active {
+    cursor: pointer;    
+}
+
+.yes-btn:active {
+    background-color: #7fa650;
+}
+
+.no-btn {
+    background-color: #4f4f4f;
+    border: 3px solid #575757;
+    color: #8f8f8f;
+}
+
+.no-btn:active {
+    background-color: #606060;
+}

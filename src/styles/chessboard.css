@@ -1,6 +1,13 @@
+#main {
+    width: 100%;
+    position: relative;
+}
+
 #chess-board {
     position: relative;
-    margin: 200px auto;
+    margin: 0 auto;
+    margin-top: 110px;
+    width: 500px;
 }
 
 .start-btn {
@@ -67,11 +74,11 @@
 }
 
 .chess-board-box:active {
-    background-color: rgba(255,255,0,0.7);
+    background-color: rgba(255,255,0,0.5);
 }
 
 .chess-board-box.active {
-    background-color: rgba(255,255,0,0.7);
+    background-color: rgba(255,255,0,0.5);
 }
 
 .chess-board-box.danger {
@@ -81,18 +88,17 @@
 .notation {
     position: absolute;
     font-weight: bold;
+    z-index: 0;
 }
 
 .numberNotation {
     top: 5px;
     left: 5px;
-    z-index: 10;
 }
 
 .alphaNotation {
     bottom: 5px;
     right: 5px;
-    z-index: 10;
 }
 
 .light-notation {
@@ -105,9 +111,8 @@
 
 .chess-piece {
     position: absolute;
-    width: 62px;
-    height: 62px;
     cursor: pointer;
+    z-index: 2;
 }
 
 .hint-box {
@@ -156,7 +161,7 @@
 #player-1 > .removed-pieces, #player-2 > .removed-pieces {
     border: 5px solid #b0e969;
     width: 400px;
-    height: 140px;
+    height: 42px;
     border-radius: 10px;
 }
 
@@ -166,4 +171,131 @@
 
 #player-2 > .removed-pieces {
     background: linear-gradient(#505050 0%, #707070 50%, #909090 100%);
+}
+
+
+.board-controls-div {
+    margin: 0 auto;
+    margin-top: 80px;
+    width: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.reset-div {
+    flex: 0.8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.controls-div {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.control-btn {
+    padding: 10px 20px;
+    border: 3px solid #7fa650;
+    border-radius: 10px;
+    background-color: #b0e969;
+    /* font-size: 2.5em; */
+    /* color: #30411d; */
+    font-family: Tahoma, Geneva, Verdana, sans-serif;
+    letter-spacing: 2px;
+    transition: all 0.3s ease-in-out;
+}
+
+.control-btn:hover, .control-btn:active {
+    cursor: pointer;    
+}
+
+.control-btn:active {
+    background-color: #7fa650;
+}
+
+.prev-btn, .next-btn {
+    background-color: #4f4f4f;
+    border: 3px solid #575757;
+    color: #8f8f8f;
+}
+
+.prev-btn:active, .next-btn:active {
+    background-color: #606060;
+}
+
+
+
+
+
+@media screen and (max-width: 550px) {
+
+    #chess-board {
+        width: 300px;
+    }
+
+    .chess-board-div {
+        width: 300px;
+        height: 300px;
+    }
+
+    .chess-board-box {
+        width: 37px;
+        height: 37px;
+    }
+
+    .chess-board-box:hover {
+        width: 36px;
+        height: 36px;
+    }
+
+    .notation {
+        font-size: xx-small;
+    }
+
+    .numberNotation {
+        top: 3px;
+        left: 3px;
+    }
+
+    .alphaNotation {
+        bottom: 3px;
+        right: 3px;
+    }
+
+    .hint-box {
+        max-width: 37px;
+        max-height: 37px;
+        padding: 13px;
+    }
+
+    .hint-box-dot {
+        width: 10px;
+        height: 10px;
+    }
+
+    #player-1 {
+        top: 305px;
+    }
+
+    #player-2 {
+        bottom: 305px;
+    }
+
+    #player-1 > .time, #player-2 > .time {
+        padding: 8px 10px;
+        font-size: 1.2em;
+        width: 50px;
+        text-align: center;
+    }
+
+    #player-1 > .removed-pieces, #player-2 > .removed-pieces {
+        width: 215px;
+        height: 30px;
+    }
+
 }
