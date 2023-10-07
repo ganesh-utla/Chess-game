@@ -101,11 +101,15 @@ const ChessBoard = () => {
     const [whiteRook1Moved, setWhiteRook1Moved] = useState(false);
     const [whiteRook2Moved, setWhiteRook2Moved] = useState(false);
 
-    const removedBlackPieceCoordinates = [{x:0.15,y:8.3},{x:0.53,y:8.3},{x:0.91,y:8.3},{x:1.29,y:8.3},{x:1.67,y:8.3},{x:2.05,y:8.3},{x:2.43,y:8.3},{x:2.81,y:8.3},
-                                        {x:3.19,y:8.3},{x:3.57,y:8.3},{x:3.95,y:8.3},{x:4.33,y:8.3},{x:4.71,y:8.3},{x:5.09,y:8.3},{x:5.47,y:8.3},{x:5.85,y:8.3}];
+    const removedBlackPieceCoordinates = window.innerWidth > 550? [{x:0.15,y:8.3},{x:0.53,y:8.3},{x:0.91,y:8.3},{x:1.29,y:8.3},{x:1.67,y:8.3},{x:2.05,y:8.3},{x:2.43,y:8.3},{x:2.81,y:8.3},
+                                        {x:3.19,y:8.3},{x:3.57,y:8.3},{x:3.95,y:8.3},{x:4.33,y:8.3},{x:4.71,y:8.3},{x:5.09,y:8.3},{x:5.47,y:8.3},{x:5.85,y:8.3}] : 
+                                        [{x:0.2,y:8.5},{x:0.57,y:8.5},{x:0.94,y:8.5},{x:1.31,y:8.5},{x:1.68,y:8.5},{x:2.05,y:8.5},{x:2.42,y:8.5},{x:2.79,y:8.5},
+                                        {x:3.16,y:8.5},{x:3.53,y:8.5},{x:3.9,y:8.5},{x:4.27,y:8.5},{x:4.64,y:8.5},{x:5.01,y:8.5},{x:5.38,y:8.5},{x:5.75,y:8.5}];
                                         
-    const removedWhitePieceCoordinates = [{x:7.35,y:-0.75},{x:6.97,y:-0.75},{x:6.59,y:-0.75},{x:6.21,y:-0.75},{x:5.83,y:-0.75},{x:5.45,y:-0.75},{x:5.07,y:-0.75},{x:4.69,y:-0.75},
-                                        {x:4.31,y:-0.75},{x:3.93,y:-0.75},{x:3.55,y:-0.75},{x:3.17,y:-0.75},{x:2.79,y:-0.75},{x:2.41,y:-0.75},{x:2.03,y:-0.75},{x:1.65,y:-0.75}];
+    const removedWhitePieceCoordinates = window.innerWidth > 550? [{x:7.35,y:-0.75},{x:6.97,y:-0.75},{x:6.59,y:-0.75},{x:6.21,y:-0.75},{x:5.83,y:-0.75},{x:5.45,y:-0.75},{x:5.07,y:-0.75},{x:4.69,y:-0.75},
+                                        {x:4.31,y:-0.75},{x:3.93,y:-0.75},{x:3.55,y:-0.75},{x:3.17,y:-0.75},{x:2.79,y:-0.75},{x:2.41,y:-0.75},{x:2.03,y:-0.75},{x:1.65,y:-0.75}]:
+                                        [{x:7.35,y:-0.8},{x:6.98,y:-0.8},{x:6.61,y:-0.8},{x:6.24,y:-0.8},{x:5.87,y:-0.8},{x:5.5,y:-0.8},{x:5.13,y:-0.8},{x:4.76,y:-0.8},
+                                        {x:4.39,y:-0.8},{x:4.02,y:-0.8},{x:3.65,y:-0.8},{x:3.28,y:-0.8},{x:2.91,y:-0.8},{x:2.54,y:-0.8},{x:2.17,y:-0.8},{x:1.8,y:-0.8}];
     
     const [curRemovedWP, setCurRemovedWP] = useState(0);
     const [curRemovedBP, setCurRemovedBP] = useState(0);
@@ -120,6 +124,7 @@ const ChessBoard = () => {
 
     const [curStateNum, setCurStateNum] = useState(0);
     const [totalStates, setTotalStates] = useState(1);
+    // eslint-disable-next-line
     const [prevStates, setPrevStates] = useState([]);
 
     const totalTime = 5;
