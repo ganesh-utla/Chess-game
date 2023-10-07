@@ -426,8 +426,10 @@ const ChessBoard = () => {
         if(["BR", "WR", "BQ", "WQ"].includes(cur.slice(0,2))) {
             let i = 1;
             while (i+y < 8) {
-                if(board[i+y][x]==='.' && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y+i, x, cur[0]))
-                    return true;
+                if(board[i+y][x]==='.') {
+                    if (canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y+i, x, cur[0]))
+                        return true;
+                }
                 else {
                     if(board[i+y][x][0]!==cur[0] && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y+i, x, cur[0]))
                         return true;
@@ -436,8 +438,10 @@ const ChessBoard = () => {
             };
             i = 1;
             while (i+x < 8) {
-                if(board[y][i+x]==='.' && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y, x+i, cur[0]))
-                    return true;
+                if(board[y][i+x]==='.') {
+                    if (canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y, x+i, cur[0]))
+                        return true;
+                }
                 else {
                     if(board[y][i+x][0]!==cur[0] && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y, x+i, cur[0]))
                         return true;
@@ -446,8 +450,10 @@ const ChessBoard = () => {
             };
             i = 1;
             while (x-i >= 0) {
-                if(board[y][x-i]==='.' && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y, x-i, cur[0]))
-                    return true;
+                if(board[y][x-i]==='.') {
+                    if (canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y, x-i, cur[0]))
+                        return true;
+                }
                 else {
                     if(board[y][x-i][0]!==cur[0] && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y, x-i, cur[0]))
                         return true;
@@ -456,8 +462,10 @@ const ChessBoard = () => {
             };
             i = 1;
             while (y-i >= 0) {
-                if(board[y-i][x]==='.' && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y-i, x, cur[0]))
-                    return true;
+                if(board[y-i][x]==='.') {
+                    if (canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y-i, x, cur[0]))
+                        return true;
+                }
                 else {
                     if(board[y-i][x][0]!==cur[0] && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y-i, x, cur[0]))
                         return true;
@@ -473,8 +481,10 @@ const ChessBoard = () => {
                 const i = x+d[0];
                 const j = y+d[1];
                 if(i >= 0 && i < 8 && j >= 0 && j < 8)  {
-                    if(board[j][i]==='.' && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, j, i, cur[0]))
-                        return true;
+                    if(board[j][i]==='.') {
+                        if (canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, j, i, cur[0]))
+                            return true;
+                    }
                     else if (board[j][i][0]!==cur[0] && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, j, i, cur[0])) 
                         return true;
                 }
@@ -484,8 +494,10 @@ const ChessBoard = () => {
         if (["BB", "WB", "BQ", "WQ"].includes(cur.slice(0,2))) {
             let i = 1; let j = 1;
             while (y+i < 8 && x+j < 8) {
-                if(board[y+i][x+j]==='.' && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y+i, x+j, cur[0]))
-                    return true;
+                if(board[y+i][x+j]==='.') {
+                    if (canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y+i, x+j, cur[0]))
+                        return true;
+                }
                 else {
                     if(board[y+i][x+j][0]!==cur[0] && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y+i, x+j, cur[0]))
                         return true;
@@ -494,8 +506,10 @@ const ChessBoard = () => {
             };
             i = 1; j = 1;
             while (y-i >=0 && x-j >=0) {
-                if(board[y-i][x-j]==='.' && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y-i, x-j, cur[0]))
-                    return true;
+                if(board[y-i][x-j]==='.') {
+                    if (canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y-i, x-j, cur[0]))
+                        return true;
+                }
                 else {
                     if(board[y-i][x-j][0]!==cur[0] && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y-i, x-j, cur[0]))
                         return true;
@@ -504,8 +518,10 @@ const ChessBoard = () => {
             };
             i = 1; j = 1;
             while (y-i >=0 && x+j < 8) {
-                if(board[y-i][x+j]==='.' && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y-i, x+j, cur[0]))
-                    return true;
+                if(board[y-i][x+j]==='.') {
+                    if (canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y-i, x+j, cur[0]))
+                        return true;
+                }
                 else {
                     if(board[y-i][x+j][0]!==cur[0] && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y-i, x+j, cur[0]))
                         return true;
@@ -514,8 +530,10 @@ const ChessBoard = () => {
             };
             i = 1; j = 1;
             while (y+i < 8 && x-j >=0) {
-                if(board[y+i][x-j]==='.' && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y+i, x-j, cur[0]))
-                    return true;
+                if(board[y+i][x-j]==='.') {
+                    if (canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y+i, x-j, cur[0]))
+                        return true;
+                }
                 else {
                     if(board[y+i][x-j][0]!==cur[0] && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y+i, x-j, cur[0]))
                         return true;
@@ -531,8 +549,10 @@ const ChessBoard = () => {
                 const i = x+d[0];
                 const j = y+d[1];
                 if(i >= 0 && i < 8 && j >= 0 && j < 8)  {
-                    if(board[j][i]==='.' && canPieceBeMoved(j, i, y, x, j, i, cur[0]))
-                        return true;
+                    if(board[j][i]==='.') {
+                        if (canPieceBeMoved(j, i, y, x, j, i, cur[0]))
+                            return true;
+                    }
                     else if (board[j][i][0]!==cur[0] && canPieceBeMoved(j, i, y, x, j, i, cur[0])) 
                         return true;
                 }
@@ -763,8 +783,10 @@ const ChessBoard = () => {
         if(["BR", "WR", "BQ", "WQ"].includes(cur.slice(0,2))) {
             let i = 1;
             while (i+y < 8) {
-                if(board[i+y][x]==='.' && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y+i, x, cur[0]))
-                    tmp.push([x,i+y]);
+                if(board[i+y][x]==='.') {
+                    if (canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y+i, x, cur[0]))
+                        tmp.push([x,i+y]);
+                }
                 else {
                     if(board[i+y][x][0]!==cur[0] && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y+i, x, cur[0]))
                         tmpPieceInDanger.push([x,i+y]);
@@ -774,8 +796,10 @@ const ChessBoard = () => {
             };
             i = 1;
             while (i+x < 8) {
-                if(board[y][i+x]==='.' && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y, x+i, cur[0]))
-                    tmp.push([i+x,y]);
+                if(board[y][i+x]==='.') {
+                    if (canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y, x+i, cur[0]))
+                        tmp.push([i+x,y]);
+                }
                 else {
                     if(board[y][i+x][0]!==cur[0] && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y, x+i, cur[0]))
                         tmpPieceInDanger.push([i+x,y]);
@@ -785,8 +809,10 @@ const ChessBoard = () => {
             };
             i = 1;
             while (x-i >= 0) {
-                if(board[y][x-i]==='.' && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y, x-i, cur[0]))
-                    tmp.push([x-i,y]);
+                if(board[y][x-i]==='.') {
+                    if (canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y, x-i, cur[0]))
+                        tmp.push([x-i,y]);
+                }
                 else {
                     if(board[y][x-i][0]!==cur[0] && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y, x-i, cur[0]))
                         tmpPieceInDanger.push([x-i,y]);
@@ -796,8 +822,10 @@ const ChessBoard = () => {
             };
             i = 1;
             while (y-i >= 0) {
-                if(board[y-i][x]==='.' && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y-i, x, cur[0]))
-                    tmp.push([x,y-i]);
+                if(board[y-i][x]==='.') {
+                    if (canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y-i, x, cur[0]))
+                        tmp.push([x,y-i]);
+                }
                 else {
                     if(board[y-i][x][0]!==cur[0] && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y-i, x, cur[0]))
                         tmpPieceInDanger.push([x,y-i]);
@@ -813,8 +841,10 @@ const ChessBoard = () => {
                 const i = x+d[0];
                 const j = y+d[1];
                 if(i >= 0 && i < 8 && j >= 0 && j < 8)  {
-                    if(board[j][i]==='.' && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, j, i, cur[0]))
-                        tmp.push([i,j]);
+                    if(board[j][i]==='.') {
+                        if (canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, j, i, cur[0]))
+                            tmp.push([i,j]);
+                    }
                     else if (board[j][i][0]!==cur[0] && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, j, i, cur[0])) 
                         tmpPieceInDanger.push([i,j]);
                 }
@@ -824,8 +854,10 @@ const ChessBoard = () => {
         if (["BB", "WB", "BQ", "WQ"].includes(cur.slice(0,2))) {
             let i = 1; let j = 1;
             while (y+i < 8 && x+j < 8) {
-                if(board[y+i][x+j]==='.' && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y+i, x+j, cur[0]))
-                    tmp.push([x+j,i+y]);
+                if(board[y+i][x+j]==='.') {
+                    if (canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y+i, x+j, cur[0]))
+                        tmp.push([x+j,i+y]);
+                }
                 else {
                     if(board[y+i][x+j][0]!==cur[0] && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y+i, x+j, cur[0]))
                         tmpPieceInDanger.push([x+j,y+i]);
@@ -835,8 +867,10 @@ const ChessBoard = () => {
             };
             i = 1; j = 1;
             while (y-i >=0 && x-j >=0) {
-                if(board[y-i][x-j]==='.' && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y-i, x-j, cur[0]))
-                    tmp.push([x-j,y-i]);
+                if(board[y-i][x-j]==='.') {
+                    if (canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y-i, x-j, cur[0]))
+                        tmp.push([x-j,y-i]);
+                }
                 else {
                     if(board[y-i][x-j][0]!==cur[0] && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y-i, x-j, cur[0]))
                         tmpPieceInDanger.push([x-j,y-i]);
@@ -846,8 +880,10 @@ const ChessBoard = () => {
             };
             i = 1; j = 1;
             while (y-i >=0 && x+j < 8) {
-                if(board[y-i][x+j]==='.' && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y-i, x+j, cur[0]))
-                    tmp.push([x+j,y-i]);
+                if(board[y-i][x+j]==='.') {
+                    if (canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y-i, x+j, cur[0]))
+                        tmp.push([x+j,y-i]);
+                }
                 else {
                     if(board[y-i][x+j][0]!==cur[0] && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y-i, x+j, cur[0]))
                         tmpPieceInDanger.push([x+j,y-i]);
@@ -857,8 +893,10 @@ const ChessBoard = () => {
             };
             i = 1; j = 1;
             while (y+i < 8 && x-j >=0) {
-                if(board[y+i][x-j]==='.' && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y+i, x-j, cur[0]))
-                    tmp.push([x-j,i+y]);
+                if(board[y+i][x-j]==='.') {
+                    if (canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y+i, x-j, cur[0]))
+                        tmp.push([x-j,i+y]);
+                }
                 else {
                     if(board[y+i][x-j][0]!==cur[0] && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y+i, x-j, cur[0]))
                         tmpPieceInDanger.push([x-j,y+i]);
@@ -874,8 +912,10 @@ const ChessBoard = () => {
                 const i = x+d[0];
                 const j = y+d[1];
                 if(i >= 0 && i < 8 && j >= 0 && j < 8)  {
-                    if(board[j][i]==='.' && canPieceBeMoved(j, i, y, x, j, i, cur[0]))
-                        tmp.push([i,j]);
+                    if(board[j][i]==='.') {
+                        if (canPieceBeMoved(j, i, y, x, j, i, cur[0]))
+                            tmp.push([i,j]);
+                    }
                     else if (board[j][i][0]!==cur[0] && canPieceBeMoved(j, i, y, x, j, i, cur[0])) 
                         tmpPieceInDanger.push([i,j]);
                 }
