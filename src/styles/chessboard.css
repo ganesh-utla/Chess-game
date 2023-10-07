@@ -203,8 +203,6 @@
     border: 3px solid #7fa650;
     border-radius: 10px;
     background-color: #b0e969;
-    /* font-size: 2.5em; */
-    /* color: #30411d; */
     font-family: Tahoma, Geneva, Verdana, sans-serif;
     letter-spacing: 2px;
     transition: all 0.3s ease-in-out;
@@ -220,16 +218,24 @@
 
 .prev-btn, .next-btn {
     background-color: #4f4f4f;
-    border: 3px solid #575757;
+    border: 3px solid #0d0d0d;
     color: #8f8f8f;
+    padding: 5px 10px;
+    padding-top: 7px;
 }
 
 .prev-btn:active, .next-btn:active {
     background-color: #606060;
 }
 
+.prev-btn > img, .next-btn > img {
+    width: 25px;
+    height: 25px;
+}
 
-
+.control-btn:disabled {
+    cursor: not-allowed;
+}
 
 
 @media screen and (max-width: 550px) {
@@ -296,6 +302,26 @@
     #player-1 > .removed-pieces, #player-2 > .removed-pieces {
         width: 215px;
         height: 30px;
+    }
+
+    .board-controls-div {
+        width: 300px;
+        margin-top: 70px;
+    }
+
+    .control-btn {
+        padding: 7px 15px;
+        border-radius: 8px;
+    }
+
+    .prev-btn, .next-btn {
+        padding: 5px 10px;
+        padding-top: 7px;
+    }
+
+    .prev-btn > img, .next-btn > img {
+        width: 20px;
+        height: 20px;
     }
 
 }

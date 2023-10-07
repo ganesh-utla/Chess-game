@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import BoardSetup from "./BoardSetup";
 import PromotionModal from "./PromotionModal";
 import WinnerModal from "./WinnerModal";
-import { addBoardState, loadBoardState } from "../utils";
+import { addBoardState, loadBoardState, setBoardStateNum } from "../utils";
 import ResetConfirmModal from "./ResetConfirmModal";
 
 const ChessBoard = () => {
@@ -118,7 +118,11 @@ const ChessBoard = () => {
 
     const [showResetModal, setShowResetModal] = useState(false);
 
-    const totalTime = 10;
+    const [curStateNum, setCurStateNum] = useState(0);
+    const [totalStates, setTotalStates] = useState(1);
+    const [prevStates, setPrevStates] = useState([]);
+
+    const totalTime = 5;
     // eslint-disable-next-line
     const incrementTime = 0;
     const [started, setStarted] = useState(true);
@@ -134,7 +138,7 @@ const ChessBoard = () => {
     const [player2Secs, setPlayer2Secs] = useState(0);
     
     useEffect(() => {
-        loadBoardState(setBoard, setPieceCharacteristics, setPawnCharacters, setCurrentPlayerWhite, setCurRemovedWP, setCurRemovedBP);
+        loadBoardState(setBoard, setPieceCharacteristics, setPawnCharacters, setCurrentPlayerWhite, setCurRemovedWP, setCurRemovedBP, setPrevStates, setCurStateNum, setTotalStates);
         // eslint-disable-next-line
     }, []);
 
@@ -309,7 +313,9 @@ const ChessBoard = () => {
         // console.log(stateAdded);
         if (!stateAdded) {
             const pieceKey = (tmp[y][x].length <= 3? tmp[y][x] : tmp[y][x][0] + tmp[y][x].slice(2)).toLowerCase();
-            addBoardState(tmp, {...pieceCharacteristics, [pieceKey]: {...pieceCharacteristics[pieceKey], x, y}}, pawnCharacters, !currentPlayerWhite, curRemovedWP, curRemovedBP);
+            addBoardState(tmp, {...pieceCharacteristics, [pieceKey]: {...pieceCharacteristics[pieceKey], x, y}}, pawnCharacters, !currentPlayerWhite, curRemovedWP, curRemovedBP, totalStates+1);
+            setCurStateNum(prev => prev+1);
+            setTotalStates(prev => prev+1);
             // console.log(tmp);
             // console.log({...pieceCharacteristics, [pieceKey]: {...pieceCharacteristics[pieceKey], x, y}});
         }
@@ -346,7 +352,7 @@ const ChessBoard = () => {
                 const pieceKey2 = (tmp[y-1][x].length <= 3? tmp[y-1][x] : tmp[y-1][x][0] + tmp[y-1][x].slice(2)).toLowerCase();;
                 // console.log(y,x,tmp[y][x],prevy, prevx,tmp[prevy][prevx], y-1,x, tmp[y-1][x]);
                 tmp[y][x] = ".";
-                addBoardState(tmp, {...pieceCharacteristics, [pieceKey1]: {x: left, y: top, size: 30}, [pieceKey2]: {...pieceCharacteristics[pieceKey2], x, y:y-1}}, pawnCharacters, !currentPlayerWhite, curRemovedWP, curRemovedBP+1);
+                addBoardState(tmp, {...pieceCharacteristics, [pieceKey1]: {x: left, y: top, size: 30}, [pieceKey2]: {...pieceCharacteristics[pieceKey2], x, y:y-1}}, pawnCharacters, !currentPlayerWhite, curRemovedWP, curRemovedBP+1, totalStates+1);
                 // console.log(tmp);
                 // console.log({...pieceCharacteristics, [pieceKey1]: {x: left, y: top, size: 30}, [pieceKey2]: {...pieceCharacteristics[pieceKey2], x, y:y-1}});
             } else {
@@ -356,7 +362,7 @@ const ChessBoard = () => {
                 tmp[y][x] = tmp[prevy][prevx];
                 tmp[prevy][prevx] = ".";
                 
-                addBoardState(tmp, {...pieceCharacteristics, [pieceKey1]: {x: left, y: top, size: 30}, [pieceKey2]: {...pieceCharacteristics[pieceKey2], x, y}}, pawnCharacters, !currentPlayerWhite, curRemovedWP, curRemovedBP+1);
+                addBoardState(tmp, {...pieceCharacteristics, [pieceKey1]: {x: left, y: top, size: 30}, [pieceKey2]: {...pieceCharacteristics[pieceKey2], x, y}}, pawnCharacters, !currentPlayerWhite, curRemovedWP, curRemovedBP+1, totalStates+1);
                 // console.log(tmp);
                 // console.log({...pieceCharacteristics, [pieceKey1]: {x: left, y: top, size: 30}, [pieceKey2]: {...pieceCharacteristics[pieceKey2], x, y}});
             }
@@ -388,18 +394,20 @@ const ChessBoard = () => {
                 const pieceKey2 = (tmp[y+1][x].length <= 3? tmp[y+1][x] : tmp[y+1][x][0] + tmp[y+1][x].slice(2)).toLowerCase();;
                 // console.log(y,x,tmp[y][x],prevy, prevx,tmp[prevy][prevx], y+1,x, tmp[y+1][x]);
                 tmp[y][x] = ".";
-                addBoardState(tmp, {...pieceCharacteristics, [pieceKey1]: {x: left, y: top, size: 30}, [pieceKey2]: {...pieceCharacteristics[pieceKey2], x:x, y:y+1}}, pawnCharacters, !currentPlayerWhite, curRemovedWP+1, curRemovedBP);
+                addBoardState(tmp, {...pieceCharacteristics, [pieceKey1]: {x: left, y: top, size: 30}, [pieceKey2]: {...pieceCharacteristics[pieceKey2], x:x, y:y+1}}, pawnCharacters, !currentPlayerWhite, curRemovedWP+1, curRemovedBP, totalStates+1);
                 // console.log(tmp);
                 // console.log({...pieceCharacteristics, [pieceKey1]: {x: left, y: top, size: 30}, [pieceKey2]: {...pieceCharacteristics[pieceKey2], x, y:y+1}});
             } else {
                 const pieceKey2 = (tmp[prevy][prevx].length <= 3? tmp[prevy][prevx] : tmp[prevy][prevx][0] + tmp[prevy][prevx].slice(2)).toLowerCase();
                 tmp[y][x] = tmp[prevy][prevx];
                 tmp[prevy][prevx] = ".";
-                addBoardState(tmp, {...pieceCharacteristics, [pieceKey1]: {x: left, y: top, size: 30}, [pieceKey2]: {...pieceCharacteristics[pieceKey2], x, y}}, pawnCharacters, !currentPlayerWhite, curRemovedWP+1, curRemovedBP);
+                addBoardState(tmp, {...pieceCharacteristics, [pieceKey1]: {x: left, y: top, size: 30}, [pieceKey2]: {...pieceCharacteristics[pieceKey2], x, y}}, pawnCharacters, !currentPlayerWhite, curRemovedWP+1, curRemovedBP, totalStates+1);
                 // console.log(tmp);
                 // console.log({...pieceCharacteristics, [pieceKey1]: {x: left, y: top, size: 30}, [pieceKey2]: {...pieceCharacteristics[pieceKey2], x, y}});
             }
         }
+        setCurStateNum(prev => prev+1);
+        setTotalStates(prev => prev+1);
     }
 
     const hasMoves = (y, x) => {
@@ -719,7 +727,7 @@ const ChessBoard = () => {
             for (let j=0; j<8; j++) {
                 r.push(tmp[i][j]);
             }
-            console.log([...r]);
+            // console.log([...r]);
         }
     }
     
@@ -955,7 +963,7 @@ const ChessBoard = () => {
     
     const handlePieceClick = ({x, y}) => {
         
-        if(!started || winner!==-1) return;
+        if(!started || winner!==-1 || curStateNum!==(totalStates-1)) return;
 
         // console.log(board);
         // console.log(pawnCharacters);
@@ -1082,11 +1090,17 @@ const ChessBoard = () => {
                 </div>
 
                 <div className="controls-div">
-                    <button className="control-btn prev-btn" onClick={() => {}}>
-                        Prev 
+                    <button className="control-btn prev-btn" onClick={() => {
+                        setCurStateNum(prev => prev-1);
+                        setBoardStateNum(curStateNum-1, setBoard, setPieceCharacteristics, setPawnCharacters);
+                    }} disabled={curStateNum===0}>
+                        <img src="/left.svg" alt="prev" /> 
                     </button>
-                    <button className="control-btn next-btn" onClick={() => {}}>
-                        Next 
+                    <button className="control-btn next-btn" onClick={() => {
+                        setCurStateNum(prev => prev+1);
+                        setBoardStateNum(curStateNum+1, setBoard, setPieceCharacteristics, setPawnCharacters);
+                    }} disabled={curStateNum===totalStates-1}>
+                        <img src="/right.svg" alt="next" /> 
                     </button>
                 </div>
             </div>
