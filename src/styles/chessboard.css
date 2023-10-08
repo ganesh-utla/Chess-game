@@ -281,7 +281,7 @@
 
 .banner-img {
     width: calc(min(90vw, 500px));
-    height: calc(min(90vh, 500px));
+    height: calc(min(90vw, 500px));
 }
 
 .banner-img > img {
