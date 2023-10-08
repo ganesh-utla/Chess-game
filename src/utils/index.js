@@ -14,7 +14,7 @@ export const addBoardState = (board, pieceCharacteristics, pawnCharacters, curre
 }
 
 
-export const loadBoardState = (setBoard, setPieceCharacteristics, setPawnCharacters, setCurrentPlayerWhite, setCurRemovedWP, setCurRemovedBP, setPrevStates, setCurStateNum, setTotalStates) => {
+export const loadBoardState = (setBoard, setPieceCharacteristics, setPawnCharacters, setCurrentPlayerWhite, setCurRemovedWP, setCurRemovedBP, setCurStateNum, setTotalStates) => {
     let boardDetails = {};
     let prevStates = [];
     if(localStorage.getItem('board-details')) {
@@ -213,7 +213,7 @@ export const loadBoardState = (setBoard, setPieceCharacteristics, setPawnCharact
     setCurRemovedBP(curRemovedBP);
     setCurStateNum(totalStates-1);
     setTotalStates(totalStates);
-    setPrevStates(JSON.parse(localStorage.getItem('prevStates')));
+    // setPrevStates(JSON.parse(localStorage.getItem('prevStates')));
 }
 
 

@@ -1,10 +1,11 @@
 import "../styles/chessboard.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import BoardSetup from "./BoardSetup";
 import PromotionModal from "./PromotionModal";
 import WinnerModal from "./WinnerModal";
 import { addBoardState, loadBoardState, setBoardStateNum } from "../utils";
 import ResetConfirmModal from "./ResetConfirmModal";
+import TimerModal from "./TimerModal";
 
 const ChessBoard = () => {
 
@@ -18,7 +19,6 @@ const ChessBoard = () => {
         ['WP1','WP2','WP3','WP4','WP5','WP6','WP7','WP8'],
         ['WR1','WN1','WB1','WQ','WK','WB2','WN2','WR2']
     ]);
-    
 
     const [br1, setBr1] = useState({x:0,y:0,size:62});
     const [bn1, setBn1] = useState({x:1,y:0,size:62});
@@ -124,28 +124,91 @@ const ChessBoard = () => {
 
     const [curStateNum, setCurStateNum] = useState(0);
     const [totalStates, setTotalStates] = useState(1);
-    // eslint-disable-next-line
-    const [prevStates, setPrevStates] = useState([]);
 
-    const totalTime = 5;
-    // eslint-disable-next-line
-    const incrementTime = 0;
-    const [started, setStarted] = useState(true);
-    // eslint-disable-next-line
+    const [isNoTimerSelected, setIsNoTimerSelected] = useState(false);
+    const [incrementTime, setIncrementTime] = useState(0);
+    const [showTimerModal, setShowTimerModal] = useState(false);
+
+    const [started, setStarted] = useState(false);
     const [isPlayer1Move, setPlayer1Move] = useState(true);
-    // eslint-disable-next-line
-    const [player1Mins, setPlayer1Mins] = useState(totalTime);
-    // eslint-disable-next-line
+
+    const [player1Mins, setPlayer1Mins] = useState(10);
     const [player1Secs, setPlayer1Secs] = useState(0);
-    // eslint-disable-next-line
-    const [player2Mins, setPlayer2Mins] = useState(totalTime);
-    // eslint-disable-next-line
+    const [player2Mins, setPlayer2Mins] = useState(10);
     const [player2Secs, setPlayer2Secs] = useState(0);
     
+    const timer1 = useRef();
+    const timer2 = useRef();
+
     useEffect(() => {
-        loadBoardState(setBoard, setPieceCharacteristics, setPawnCharacters, setCurrentPlayerWhite, setCurRemovedWP, setCurRemovedBP, setPrevStates, setCurStateNum, setTotalStates);
+        if (started && !isNoTimerSelected) {
+            if (isPlayer1Move) {
+                timer1.current = setInterval(() => {
+                    if (player1Secs===0) {
+                        if (player1Mins===0) {
+                            setWinner(2);
+                            setTimeout(() => setShowWinnerModal(true), 1000);
+                            clearInterval(timer1.current);
+                            return ;
+                        }
+                        setPlayer1Mins(player1Mins - 1);
+                        setPlayer1Secs(59);
+                    } else {
+                        setPlayer1Secs(player1Secs - 1);
+                    }
+                    // console.log( "Player1",player1Mins, player1Secs);
+                }, 1000);
+            } else {
+                timer2.current = setInterval(() => {
+                    if (player2Secs===0) {
+                        if (player2Mins===0) {
+                            setWinner(1);
+                            setTimeout(() => setShowWinnerModal(true), 1000);
+                            clearInterval(timer2.current);
+                            return ;
+                        }
+                        setPlayer2Mins(player2Mins - 1);
+                        setPlayer2Secs(59);
+                    } else {
+                        setPlayer2Secs(player2Secs - 1);
+                    }
+                    // console.log( "Player2",player2Mins, player2Secs);
+                }, 1000);
+
+            }
+            return () => {
+                clearInterval(timer1.current);
+                clearInterval(timer2.current);
+            };
+        }
+    }, [started, isNoTimerSelected, isPlayer1Move, player1Mins, player1Secs, player2Mins, player2Secs]);
+
+    useEffect(() => {
+        loadBoardState(setBoard, setPieceCharacteristics, setPawnCharacters, setCurrentPlayerWhite, setCurRemovedWP, setCurRemovedBP, setCurStateNum, setTotalStates);
         // eslint-disable-next-line
     }, []);
+
+
+    const handlePlayersTime = () => {
+        if (isPlayer1Move) {
+            if (player1Secs+incrementTime > 59) {
+                setPlayer1Secs(player1Secs + incrementTime - 60);
+                setPlayer1Mins(player1Mins + 1);
+            } else {
+                setPlayer1Secs(player1Secs + incrementTime);
+            }
+            clearInterval(timer1.current);
+        } else {
+            if (player2Secs+incrementTime > 59) {
+                setPlayer2Secs(player2Secs + incrementTime - 60);
+                setPlayer2Mins(player2Mins + 1);
+            } else {
+                setPlayer2Secs(player2Secs + incrementTime);
+            }
+            clearInterval(timer2.current);
+        }
+        setPlayer1Move(prev => !prev);
+    }
 
 
     const checkCoordinates = (x,y) => {
@@ -324,6 +387,8 @@ const ChessBoard = () => {
             // console.log(tmp);
             // console.log({...pieceCharacteristics, [pieceKey]: {...pieceCharacteristics[pieceKey], x, y}});
         }
+
+        handlePlayersTime();
     }
 
     const removePiece = (x, y, prevx, prevy, enpassant=false) => {
@@ -1072,8 +1137,6 @@ const ChessBoard = () => {
     return (
         <div id="main">
 
-            {!started && <button className="start-btn" onClick={() => {setStarted(true)}}>Start</button>}
-
             {showWinnerModal && 
                 <WinnerModal
                     winner={winner}
@@ -1099,38 +1162,70 @@ const ChessBoard = () => {
                 <ResetConfirmModal setShowResetModal={setShowResetModal} />
             }
 
-            { started && 
-                <div id="chess-board">
-                    <div id="player-1">
-                        <div className="removed-pieces"></div>
-                        <div className="time">
-                            <div>{player1Mins < 10? "0" + player1Mins : player1Mins}:{player1Secs < 10? "0" + player1Secs : player1Secs}</div>
-                        </div>
+            {showTimerModal &&
+                <TimerModal 
+                    setPlayer1Mins={setPlayer1Mins}
+                    setPlayer2Mins={setPlayer2Mins}
+                    setPlayer1Secs={setPlayer1Secs}
+                    setPlayer2Secs={setPlayer2Secs}
+                    setIncrementTime={setIncrementTime} 
+                    setShowTimerModal={setShowTimerModal}
+                    setIsNoTimerSelected={setIsNoTimerSelected}
+                />
+            }
+
+            <div id="chess-board">
+                <div id="player-1">
+                    <div className="removed-pieces"></div>
+                    <div className="time">
+                        {isNoTimerSelected? 
+                            <div>-- : --</div> :
+                            <div style={{color:(player1Mins===0 && player1Secs <= 59)? "red" : "black"}}>
+                                {player1Mins < 10? "0" + player1Mins : player1Mins}:{player1Secs < 10? "0" + player1Secs : player1Secs}
+                            </div>
+                        }
                     </div>
-                    <BoardSetup
-                        checkCoordinates={checkCoordinates} 
-                        handlePieceClick={handlePieceClick}
-                        hints={hints} 
-                        prevActive={prevActive}
-                        movePiece={movePiece}
-                        setHints={setHints}
-                        pieceInDanger={pieceInDanger}
-                        setPieceInDanger={setPieceInDanger}
-                        pieceCharacteristics={pieceCharacteristics}
-                        pawnCharacters={pawnCharacters}
-                    />
-                    <div id="player-2">
-                        <div className="time">
-                        <div>{player2Mins < 10? "0" + player2Mins : player2Mins}:{player2Secs < 10? "0" + player2Secs : player2Secs}</div>
-                        </div>
-                        <div className="removed-pieces"></div>
+                </div>
+                <BoardSetup
+                    checkCoordinates={checkCoordinates} 
+                    handlePieceClick={handlePieceClick}
+                    hints={hints} 
+                    prevActive={prevActive}
+                    movePiece={movePiece}
+                    setHints={setHints}
+                    pieceInDanger={pieceInDanger}
+                    setPieceInDanger={setPieceInDanger}
+                    pieceCharacteristics={pieceCharacteristics}
+                    pawnCharacters={pawnCharacters}
+                />
+                <div id="player-2">
+                    <div className="time">
+                        {isNoTimerSelected? 
+                            <div>-- : --</div> :
+                            <div style={{color:(player1Mins===0 && player1Secs <= 59)? "red" : "black"}}>
+                                {player2Mins < 10? "0" + player2Mins : player2Mins}:{player2Secs < 10? "0" + player2Secs : player2Secs}
+                            </div>
+                        }
                     </div>
-                </div> 
-            } 
+                    <div className="removed-pieces"></div>
+                </div>
+            </div> 
+
             <div className="board-controls-div">
                 <div className="reset-div">
-                    <button className="control-btn reset-btn" onClick={() => setShowResetModal(true)}>
-                        Reset 
+                    <button className="control-btn reset-btn" onClick={() => {
+                        if (started) setShowResetModal(true);
+                        else {
+                            setStarted(true);
+                        }
+                    }}>
+                        {started? "Reset" : "Start"} 
+                    </button>
+                </div>
+                
+                <div className="timer-div">
+                    <button className="control-btn timer-btn" onClick={() => setShowTimerModal(true)} disabled={started}>
+                        <img src="/clock.png" alt="clock" /> 
                     </button>
                 </div>
 
@@ -1149,7 +1244,6 @@ const ChessBoard = () => {
                     </button>
                 </div>
             </div>
-
         </div>
     )
 }

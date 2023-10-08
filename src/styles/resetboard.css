@@ -45,8 +45,6 @@
     border: 3px solid #7fa650;
     border-radius: 10px;
     background-color: #b0e969;
-    /* font-size: 2.5em; */
-    /* color: #30411d; */
     font-family: Tahoma, Geneva, Verdana, sans-serif;
     letter-spacing: 2px;
     transition: all 0.3s ease-in-out;
@@ -62,14 +60,17 @@
 
 .yes-btn:active {
     background-color: #7fa650;
+    color: black;
+    outline: 2px solid white;
 }
 
 .no-btn {
     background-color: #4f4f4f;
     border: 3px solid #575757;
-    color: #8f8f8f;
+    color: #c8c8c8;
 }
 
 .no-btn:active {
     background-color: #606060;
+    outline: 2px solid white;
 }

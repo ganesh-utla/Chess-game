@@ -1,0 +1,111 @@
+.timer-modal {
+    height: 100vh;
+    width: 100%;
+    position: absolute;
+    z-index: 100;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.timermodal-div {
+    position: sticky;
+    background-color: #bbbbbb;
+    border-radius: 30px;
+    /* height: 400px; */
+    width: min(90vw, 400px);
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0 auto;
+    display: block;
+}
+
+.close-div {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.close-button-div {
+    padding-right: 20px;
+    padding-top: 20px;
+}
+
+.close-button {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+
+.timer-options-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.timer-option-control {
+    padding: 5px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.timer-selected-div {
+    margin-top: 30px;
+}
+
+.heading {
+    text-align: center;
+    font-size: large;
+    font-weight: 600;
+}
+
+.timer-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.timer-detail-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.timer-detail-div > input {
+    padding: 4px 6px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    text-align: center;
+    width: 50px;
+}
+
+.save-button-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.save-button {
+    padding: 10px 20px;
+    border: 3px solid #7fa650;
+    border-radius: 10px;
+    background-color: #b0e969;
+    font-family: Tahoma, Geneva, Verdana, sans-serif;
+    letter-spacing: 2px;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.save-button:active {
+    background-color: #7fa650;
+    color: black;
+    outline: 2px solid white;
+}
+
