@@ -10,7 +10,6 @@
     position: sticky;
     background-color: #bbbbbb;
     border-radius: 30px;
-    /* height: 400px; */
     width: min(90vw, 400px);
     top: 50%;
     transform: translateY(-50%);

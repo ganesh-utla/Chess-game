@@ -9,6 +9,8 @@ import TimerModal from "./TimerModal";
 
 const ChessBoard = () => {
 
+    const [showStartingBanner, setShowStartingBanner] = useState(true);
+
     const [board, setBoard] = useState([
         ['BR1','BN1','BB1','BQ','BK','BB2','BN2','BR2'],
         ['BP1','BP2','BP3','BP4','BP5','BP6','BP7','BP8'],
@@ -156,7 +158,6 @@ const ChessBoard = () => {
                     } else {
                         setPlayer1Secs(player1Secs - 1);
                     }
-                    // console.log( "Player1",player1Mins, player1Secs);
                 }, 1000);
             } else {
                 timer2.current = setInterval(() => {
@@ -172,7 +173,6 @@ const ChessBoard = () => {
                     } else {
                         setPlayer2Secs(player2Secs - 1);
                     }
-                    // console.log( "Player2",player2Mins, player2Secs);
                 }, 1000);
 
             }
@@ -220,7 +220,6 @@ const ChessBoard = () => {
     }
 
     const movePiece = (x, y, prevX, prevY, sym, stateAdded=false) => {
-        // console.log(prevY, prevX, " ", y,x, " ", board[prevY][prevX], " ",board[y][x]);
         
         let tmp = board;
         const prevPiece = board[y][x];
@@ -282,8 +281,6 @@ const ChessBoard = () => {
         else if(tmp[y][x]==="WP8" || tmp[y][x]==="WQP8" || tmp[y][x]==="WNP8" || tmp[y][x]==="WBP8" || tmp[y][x]==="WRP8") setWp8({...wp8, x, y});
         tmp[prevY][prevX] = sym;
         
-        // console.log(prevY, prevX, " ", y,x, " ", prevPiece, board[x][prevY]);
-        // console.log(board);
         if (tmp[y][x][0]==='B' && tmp[y][x][1]==='P') {
             if ((y - prevY)===2) {
                 setIsLastBlackPawnDoubleMove(x);
@@ -293,7 +290,6 @@ const ChessBoard = () => {
 
             if (Math.abs(x - prevX)===1 && prevPiece===".") {
                 removePiece(x, prevY, prevX, prevY, true);
-                // removePiece(x, prevY);
                 tmp[prevY][x] = ".";
                 stateAdded = true;
             }
@@ -316,7 +312,6 @@ const ChessBoard = () => {
             
             if (Math.abs(x - prevX)===1 && prevPiece===".") {
                 removePiece(x, prevY, prevX, prevY, true);
-                // removePiece(x, prevY);
                 tmp[prevY][x] = "."
                 stateAdded = true;
             }
@@ -350,6 +345,8 @@ const ChessBoard = () => {
 
             if (hasNotMoves) {
                 setWinner(1);
+                clearInterval(timer1.current);
+                clearInterval(timer2.current);
                 setTimeout(() => setShowWinnerModal(true), 1000);
             }
 
@@ -369,6 +366,8 @@ const ChessBoard = () => {
 
             if (hasNotMoves) {
                 setWinner(0);
+                clearInterval(timer1.current);
+                clearInterval(timer2.current);
                 setTimeout(() => setShowWinnerModal(true), 1000);
             }
         }
@@ -378,21 +377,17 @@ const ChessBoard = () => {
         setBoard(tmp);
         setCurrentPlayerWhite(!currentPlayerWhite);
         
-        // console.log(stateAdded);
         if (!stateAdded) {
             const pieceKey = (tmp[y][x].length <= 3? tmp[y][x] : tmp[y][x][0] + tmp[y][x].slice(2)).toLowerCase();
             addBoardState(tmp, {...pieceCharacteristics, [pieceKey]: {...pieceCharacteristics[pieceKey], x, y}}, pawnCharacters, !currentPlayerWhite, curRemovedWP, curRemovedBP, totalStates+1);
             setCurStateNum(prev => prev+1);
             setTotalStates(prev => prev+1);
-            // console.log(tmp);
-            // console.log({...pieceCharacteristics, [pieceKey]: {...pieceCharacteristics[pieceKey], x, y}});
         }
 
         handlePlayersTime();
     }
 
     const removePiece = (x, y, prevx, prevy, enpassant=false) => {
-    // const removePiece = (x, y) => {
         let tmp = getBoardCopy();
         if(tmp[y][x][0]==="B") {
             const left = removedBlackPieceCoordinates[curRemovedBP].x;
@@ -420,21 +415,15 @@ const ChessBoard = () => {
             const pieceKey1 = (tmp[y][x].length <= 3? tmp[y][x] : tmp[y][x][0] + tmp[y][x].slice(2)).toLowerCase();
             if (enpassant) {
                 const pieceKey2 = (tmp[y-1][x].length <= 3? tmp[y-1][x] : tmp[y-1][x][0] + tmp[y-1][x].slice(2)).toLowerCase();;
-                // console.log(y,x,tmp[y][x],prevy, prevx,tmp[prevy][prevx], y-1,x, tmp[y-1][x]);
                 tmp[y][x] = ".";
                 addBoardState(tmp, {...pieceCharacteristics, [pieceKey1]: {x: left, y: top, size: 30}, [pieceKey2]: {...pieceCharacteristics[pieceKey2], x, y:y-1}}, pawnCharacters, !currentPlayerWhite, curRemovedWP, curRemovedBP+1, totalStates+1);
-                // console.log(tmp);
-                // console.log({...pieceCharacteristics, [pieceKey1]: {x: left, y: top, size: 30}, [pieceKey2]: {...pieceCharacteristics[pieceKey2], x, y:y-1}});
             } else {
                 const pieceKey2 = (tmp[prevy][prevx].length <= 3? tmp[prevy][prevx] : tmp[prevy][prevx][0] + tmp[prevy][prevx].slice(2)).toLowerCase();
-                // console.log(y,x,prevy, prevx, tmp[prevy][prevx], tmp[y][x]);
 
                 tmp[y][x] = tmp[prevy][prevx];
                 tmp[prevy][prevx] = ".";
                 
                 addBoardState(tmp, {...pieceCharacteristics, [pieceKey1]: {x: left, y: top, size: 30}, [pieceKey2]: {...pieceCharacteristics[pieceKey2], x, y}}, pawnCharacters, !currentPlayerWhite, curRemovedWP, curRemovedBP+1, totalStates+1);
-                // console.log(tmp);
-                // console.log({...pieceCharacteristics, [pieceKey1]: {x: left, y: top, size: 30}, [pieceKey2]: {...pieceCharacteristics[pieceKey2], x, y}});
             }
         }
         else {
@@ -462,18 +451,13 @@ const ChessBoard = () => {
             const pieceKey1 = (tmp[y][x].length <= 3? tmp[y][x] : tmp[y][x][0] + tmp[y][x].slice(2)).toLowerCase();
             if (enpassant) {
                 const pieceKey2 = (tmp[y+1][x].length <= 3? tmp[y+1][x] : tmp[y+1][x][0] + tmp[y+1][x].slice(2)).toLowerCase();;
-                // console.log(y,x,tmp[y][x],prevy, prevx,tmp[prevy][prevx], y+1,x, tmp[y+1][x]);
                 tmp[y][x] = ".";
                 addBoardState(tmp, {...pieceCharacteristics, [pieceKey1]: {x: left, y: top, size: 30}, [pieceKey2]: {...pieceCharacteristics[pieceKey2], x:x, y:y+1}}, pawnCharacters, !currentPlayerWhite, curRemovedWP+1, curRemovedBP, totalStates+1);
-                // console.log(tmp);
-                // console.log({...pieceCharacteristics, [pieceKey1]: {x: left, y: top, size: 30}, [pieceKey2]: {...pieceCharacteristics[pieceKey2], x, y:y+1}});
             } else {
                 const pieceKey2 = (tmp[prevy][prevx].length <= 3? tmp[prevy][prevx] : tmp[prevy][prevx][0] + tmp[prevy][prevx].slice(2)).toLowerCase();
                 tmp[y][x] = tmp[prevy][prevx];
                 tmp[prevy][prevx] = ".";
                 addBoardState(tmp, {...pieceCharacteristics, [pieceKey1]: {x: left, y: top, size: 30}, [pieceKey2]: {...pieceCharacteristics[pieceKey2], x, y}}, pawnCharacters, !currentPlayerWhite, curRemovedWP+1, curRemovedBP, totalStates+1);
-                // console.log(tmp);
-                // console.log({...pieceCharacteristics, [pieceKey1]: {x: left, y: top, size: 30}, [pieceKey2]: {...pieceCharacteristics[pieceKey2], x, y}});
             }
         }
         setCurStateNum(prev => prev+1);
@@ -486,7 +470,6 @@ const ChessBoard = () => {
         const bkcoor = getCoordinates("BK");
         const wkcoor = getCoordinates("WK");
         const curkcoor = cur[0]==='B'? [...bkcoor] : [...wkcoor];
-        // console.log(y, x, cur, curkcoor);
 
         if(["BR", "WR", "BQ", "WQ"].includes(cur.slice(0,2))) {
             let i = 1;
@@ -722,20 +705,17 @@ const ChessBoard = () => {
 
         if (c==='B') {
             if (kx >= 0 && kx < 8 && ky >= 0 && ky < 8 && tmp[kx][ky][0]==='W' && tmp[kx][ky][1]==='P' && (kx-kcx)===1 && Math.abs(ky-kcy)===1) {
-                // console.log(kx, ky);
                 return false;
             }
             for (let ind=0; ind<8; ind++) {
                 const nx = kcx + d[ind][0], ny = kcy + d[ind][1];
                 if (nx >= 0 && nx < 8 && ny >= 0 && ny < 8 && tmp[nx][ny][0]==='W' && tmp[nx][ny][1]==='N') {
-                    // console.log(nx, ny);
                     return false;
                 }
             }
             for (let ind=0; ind<8; ind++) {
                 const nx = kcx + dk[ind][0], ny = kcy + dk[ind][1];
                 if (nx >= 0 && nx < 8 && ny >= 0 && ny < 8 && tmp[nx][ny][0]==='W' && tmp[nx][ny][1]==='K') {
-                    // console.log(nx, ny);
                     return false;
                 }
             }
@@ -743,20 +723,17 @@ const ChessBoard = () => {
 
         if (c==='W') {
             if (kx >= 0 && kx < 8 && ky >= 0 && ky < 8 && tmp[kx][ky][0]==='B' && tmp[kx][ky][1]==='P' && (kx-kcx)===-1 && Math.abs(ky-kcy)===1) {
-                // console.log(kx, ky);
                 return false;
             }
             for (let ind=0; ind<8; ind++) {
                 const nx = kcx + d[ind][0], ny = kcy + d[ind][1];
                 if (nx >= 0 && nx < 8 && ny >= 0 && ny < 8 && tmp[nx][ny][0]==='B' && tmp[nx][ny][1]==='N') {
-                    // console.log(nx, ny);
                     return false;
                 }
             }
             for (let ind=0; ind<8; ind++) {
                 const nx = kcx + dk[ind][0], ny = kcy + dk[ind][1];
                 if (nx >= 0 && nx < 8 && ny >= 0 && ny < 8 && tmp[nx][ny][0]==='B' && tmp[nx][ny][1]==='K') {
-                    // console.log(nx, ny);
                     return false;
                 }
             }
@@ -767,7 +744,6 @@ const ChessBoard = () => {
                 return true;
             if (tmp[kx][ky][0]!==".") {
                 if (attacks.includes(tmp[kx][ky][1])) {
-                    // console.log(kx, ky);
                     safe = false;
                 }
                 break;
@@ -778,7 +754,6 @@ const ChessBoard = () => {
     }
 
     const isKingSafeAtPlace = (tmp, kx, ky, c) => {
-        // console.log(kx, ky);
         if (!canPieceBeMovedUtil(tmp, kx, ky, c, 1, 0, ['R','Q']))
             return false;
         if (!canPieceBeMovedUtil(tmp, kx, ky, c, 0, 1, ['R','Q']))
@@ -809,29 +784,13 @@ const ChessBoard = () => {
         }
         return [...tmp];
     }
-
-    // eslint-disable-next-line
-    const printBoard = (tmp) => {
-        for (let i=0; i<8; i++) {
-            let r = [];
-            for (let j=0; j<8; j++) {
-                r.push(tmp[i][j]);
-            }
-            // console.log([...r]);
-        }
-    }
     
 
     const canPieceBeMoved = (kx, ky, x1, y1, x2, y2, c) => {
         const tmp = getBoardCopy();
-        // console.log(kx, ky, x1, y1, x2, y2, c, board[x1][y1]);
-        // console.log(board);
         tmp[x2][y2] = tmp[x1][y1];
         tmp[x1][y1] = ".";
-        // printBoard(tmp);
-        // console.log(tmp);
         const isKingSafe = isKingSafeAtPlace(tmp, kx, ky, c);
-        // console.log(isKingSafe);
         return isKingSafe;
     }
 
@@ -1061,7 +1020,6 @@ const ChessBoard = () => {
             else if (y===4 && x+1 < 8 && isLastWhitePawnDoubleMove===x+1 && canPieceBeMoved(bkcoor[0], bkcoor[1], y, x, y+1, x+1, 'B')) {
                 tmp.push([x+1,y+1]);
             }
-            // console.log(tmp);
         }
 
         setHints([...tmp]);
@@ -1074,10 +1032,6 @@ const ChessBoard = () => {
     const handlePieceClick = ({x, y}) => {
         
         if(!started || winner!==-1 || curStateNum!==(totalStates-1)) return;
-
-        // console.log(board);
-        // console.log(pawnCharacters);
-        // console.log(pieceCharacteristics);
 
         if(hintPieceActive[0]!==-1) {
             document.getElementsByClassName(`${hintPieceActive[0]}-${hintPieceActive[1]}`)[0].classList.remove('active');
@@ -1136,6 +1090,19 @@ const ChessBoard = () => {
     
     return (
         <div id="main">
+
+            {showStartingBanner && 
+                <div className="starting-banner">
+                    <div className="banner-div">
+                        <div className="banner-img">
+                            <img src="/chess-banner.png" alt="banner" />
+                        </div>
+                        <button className="lets-play-btn" onClick={() => setShowStartingBanner(false)}>
+                            Lets Play!
+                        </button>
+                    </div>
+                </div>
+            }
 
             {showWinnerModal && 
                 <WinnerModal
