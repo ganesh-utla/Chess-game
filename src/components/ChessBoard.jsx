@@ -119,6 +119,9 @@ const ChessBoard = () => {
     const [isLastBlackPawnDoubleMove, setIsLastBlackPawnDoubleMove] = useState(-1);
     const [isLastWhitePawnDoubleMove, setIsLastWhitePawnDoubleMove] = useState(-1);
 
+    const [curPieceX, setCurPieceX] = useState(-1);
+    const [curPieceY, setCurPieceY] = useState(-1);
+
     const [winner, setWinner] = useState(-1);
     const [showWinnerModal, setShowWinnerModal] = useState(false);
 
@@ -138,12 +141,14 @@ const ChessBoard = () => {
     const [player1Secs, setPlayer1Secs] = useState(0);
     const [player2Mins, setPlayer2Mins] = useState(10);
     const [player2Secs, setPlayer2Secs] = useState(0);
+
+    const [running, setRunning] = useState(false);
     
     const timer1 = useRef();
     const timer2 = useRef();
 
     useEffect(() => {
-        if (started && !isNoTimerSelected) {
+        if (started && !isNoTimerSelected && running) {
             if (isPlayer1Move) {
                 timer1.current = setInterval(() => {
                     if (player1Secs===0) {
@@ -151,6 +156,7 @@ const ChessBoard = () => {
                             setWinner(2);
                             setTimeout(() => setShowWinnerModal(true), 1000);
                             clearInterval(timer1.current);
+                            setRunning(false);
                             return ;
                         }
                         setPlayer1Mins(player1Mins - 1);
@@ -166,6 +172,7 @@ const ChessBoard = () => {
                             setWinner(1);
                             setTimeout(() => setShowWinnerModal(true), 1000);
                             clearInterval(timer2.current);
+                            setRunning(false);
                             return ;
                         }
                         setPlayer2Mins(player2Mins - 1);
@@ -181,7 +188,7 @@ const ChessBoard = () => {
                 clearInterval(timer2.current);
             };
         }
-    }, [started, isNoTimerSelected, isPlayer1Move, player1Mins, player1Secs, player2Mins, player2Secs]);
+    }, [started, isNoTimerSelected, running, isPlayer1Move, player1Mins, player1Secs, player2Mins, player2Secs]);
 
     useEffect(() => {
         loadBoardState(setBoard, setPieceCharacteristics, setPawnCharacters, setCurrentPlayerWhite, setCurRemovedWP, setCurRemovedBP, setCurStateNum, setTotalStates);
@@ -347,6 +354,7 @@ const ChessBoard = () => {
                 setWinner(1);
                 clearInterval(timer1.current);
                 clearInterval(timer2.current);
+                setRunning(false);
                 setTimeout(() => setShowWinnerModal(true), 1000);
             }
 
@@ -368,6 +376,7 @@ const ChessBoard = () => {
                 setWinner(0);
                 clearInterval(timer1.current);
                 clearInterval(timer2.current);
+                setRunning(false);
                 setTimeout(() => setShowWinnerModal(true), 1000);
             }
         }
@@ -481,6 +490,7 @@ const ChessBoard = () => {
                 else {
                     if(board[i+y][x][0]!==cur[0] && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y+i, x, cur[0]))
                         return true;
+                    break;
                 }
                 i += 1
             };
@@ -493,6 +503,7 @@ const ChessBoard = () => {
                 else {
                     if(board[y][i+x][0]!==cur[0] && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y, x+i, cur[0]))
                         return true;
+                    break;
                 }
                 i += 1
             };
@@ -505,6 +516,7 @@ const ChessBoard = () => {
                 else {
                     if(board[y][x-i][0]!==cur[0] && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y, x-i, cur[0]))
                         return true;
+                    break;
                 }
                 i += 1
             };
@@ -517,6 +529,7 @@ const ChessBoard = () => {
                 else {
                     if(board[y-i][x][0]!==cur[0] && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y-i, x, cur[0]))
                         return true;
+                    break;
                 }
                 i += 1
             };
@@ -549,6 +562,7 @@ const ChessBoard = () => {
                 else {
                     if(board[y+i][x+j][0]!==cur[0] && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y+i, x+j, cur[0]))
                         return true;
+                    break;
                 }
                 i += 1; j += 1;
             };
@@ -561,6 +575,7 @@ const ChessBoard = () => {
                 else {
                     if(board[y-i][x-j][0]!==cur[0] && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y-i, x-j, cur[0]))
                         return true;
+                    break;
                 }
                 i += 1; j += 1;
             };
@@ -573,6 +588,7 @@ const ChessBoard = () => {
                 else {
                     if(board[y-i][x+j][0]!==cur[0] && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y-i, x+j, cur[0]))
                         return true;
+                    break;
                 }
                 i += 1; j += 1;
             };
@@ -585,6 +601,7 @@ const ChessBoard = () => {
                 else {
                     if(board[y+i][x-j][0]!==cur[0] && canPieceBeMoved(curkcoor[0], curkcoor[1], y, x, y+i, x-j, cur[0]))
                         return true;
+                    break;
                 }
                 i += 1; j += 1;
             };
@@ -1033,6 +1050,9 @@ const ChessBoard = () => {
         
         if(!started || winner!==-1 || curStateNum!==(totalStates-1)) return;
 
+        setCurPieceX(x);
+        setCurPieceY(y);
+
         if(hintPieceActive[0]!==-1) {
             document.getElementsByClassName(`${hintPieceActive[0]}-${hintPieceActive[1]}`)[0].classList.remove('active');
         }
@@ -1053,7 +1073,6 @@ const ChessBoard = () => {
             })
             setPieceInDanger([]);
             removePiece(x, y, prevActive[0], prevActive[1], false);
-            // removePiece(x, y);
             movePiece(x, y, prevActive[0], prevActive[1], '.', true);
         }
 
@@ -1184,6 +1203,7 @@ const ChessBoard = () => {
                         if (started) setShowResetModal(true);
                         else {
                             setStarted(true);
+                            setRunning(true);
                         }
                     }}>
                         {started? "Reset" : "Start"} 
@@ -1200,6 +1220,20 @@ const ChessBoard = () => {
                     <button className="control-btn prev-btn" onClick={() => {
                         setCurStateNum(prev => prev-1);
                         setBoardStateNum(curStateNum-1, setBoard, setPieceCharacteristics, setPawnCharacters);
+                        setHints([]);
+                        pieceInDanger.forEach((c) => {
+                            document.getElementsByClassName(`${c[0]}-${c[1]}`)[0].classList.remove('danger');
+                        })
+                        setPieceInDanger([]);
+                        if (hintPieceActive[0]!==-1) {
+                            document.getElementsByClassName(`${hintPieceActive[0]}-${hintPieceActive[1]}`)[0].classList.remove('active');
+                        }
+                        if (prevActive[0]!==-1) {
+                            document.getElementsByClassName(`${prevActive[0]}-${prevActive[1]}`)[0].classList.remove('active');
+                        }
+                        if (curPieceX!==-1) {
+                            document.getElementsByClassName(`${curPieceX}-${curPieceY}`)[0].classList.remove('active');
+                        }
                     }} disabled={curStateNum===0}>
                         <img src="/left.svg" alt="prev" /> 
                     </button>
