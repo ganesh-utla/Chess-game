@@ -1169,7 +1169,7 @@ const ChessBoard = () => {
                     <div className="time">
                         {isNoTimerSelected? 
                             <div>-- : --</div> :
-                            <div style={{color:(player1Mins===0 && player1Secs <= 59)? "red" : "black"}}>
+                            <div style={{color:(player2Mins===0 && player2Secs <= 59)? "red" : "black"}}>
                                 {player2Mins < 10? "0" + player2Mins : player2Mins}:{player2Secs < 10? "0" + player2Secs : player2Secs}
                             </div>
                         }
