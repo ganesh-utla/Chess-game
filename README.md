@@ -1,70 +1,43 @@
-# Getting Started with Create React App
+# GChess - A Local Two-Player Chess Game
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Welcome to the Local Two-Player Chess Game! This is a classic chess game designed for two players to enjoy together in a local setting. Whether you're a seasoned chess player or a beginner looking to learn the game, this application provides an engaging and fun chess-playing experience.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **Two-Player Mode:** Play chess with a friend or family member on the same device. The game is perfect for face-to-face matches, allowing you to strategize and enjoy the game in person.
 
-### `npm start`
+- **Classic Chess Rules:** Experience the traditional rules of chess, including all the standard moves, castling, en passant, and pawn promotion. This game adheres to the official chess rules and provides a realistic chess-playing experience.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **User-Friendly Interface:** The game comes with an intuitive and visually appealing user interface. The chessboard and pieces are easy to navigate, making it accessible for players of all ages.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **Move Validation:** The game ensures that all moves are legal, helping players learn and improve their chess skills. If you attempt an invalid move, the game will guide you on the correct move.
 
-### `npm test`
+- **Turn-Based Play:** Take turns with your opponent to make your moves, just like in a real chess game. The game keeps track of whose turn it is, so you can focus on your strategy.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Optional Timer:** Enjoy a timed chess match with an optional timer feature. Set the timer to your preferred duration, and the game will automatically track the remaining time for each player's turn, adding an extra layer of excitement to your games.
+  
+- **Game State Preservation:** If you need to pause or exit the game, your progress will be saved. You can return to your ongoing game at any time without losing your moves.
 
-### `npm run build`
+## Getting Started
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+First, run the development server:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+npm run start
+# or
+yarn start
+# or
+pnpm start
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-### `npm run eject`
+## Contributing
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+We welcome contributions from everyone even the beginners.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+LinkedIn - [Ganesh Utla](https://www.linkedin.com/in/ganesh-utla-888abc/)
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Happy coding!
